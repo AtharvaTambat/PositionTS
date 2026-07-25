@@ -1,0 +1,1768 @@
+2 channel Terms of Service accepted
+Channels:
+ - conda-forge
+ - defaults
+Platform: linux-64
+Collecting package metadata (repodata.json): - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ done
+Solving environment: / - \ | / - \ | / - \ done
+
+## Package Plan ##
+
+  environment location: /home/rbs-ml/205030033/miniconda3/envs/rdkit
+
+  added / updated specs:
+    - rdkit
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    ca-certificates-2026.7.22  |       hbd8a1cb_0         129 KB  conda-forge
+    cairo-1.18.4               |       he90730b_1         966 KB  conda-forge
+    charset-normalizer-3.4.9   |     pyhd8ed1ab_0          60 KB  conda-forge
+    contourpy-1.3.3            |  py311h724c32c_4         313 KB  conda-forge
+    cyrus-sasl-2.1.28          |       hac629b4_1         205 KB  conda-forge
+    eigen-abi-5.0.1.80         |       hf414acd_0          13 KB  conda-forge
+    fontconfig-2.18.2          |       h27c8c51_0         286 KB  conda-forge
+    fonts-conda-forge-1        |       hc364b38_1           4 KB  conda-forge
+    fonttools-4.63.0           |  py311h3778330_0         2.9 MB  conda-forge
+    freetype-2.14.3            |       ha770c72_0         170 KB  conda-forge
+    fribidi-1.0.16             |       hb03c661_0          60 KB  conda-forge
+    graphite2-1.3.15           |       hecca717_0          98 KB  conda-forge
+    greenlet-3.5.4             |  py311hc665b79_0         274 KB  conda-forge
+    icu-78.3                   |       h54a6638_2        13.8 MB  conda-forge
+    kiwisolver-1.5.0           |  py311h724c32c_0          76 KB  conda-forge
+    lcms2-2.19.1               |       h0c24ade_1         246 KB  conda-forge
+    libboost-1.90.0            |       hd24cca6_1         3.1 MB  conda-forge
+    libboost-python-1.90.0     |  py311h1d5f577_1         123 KB  conda-forge
+    libfreetype-2.14.3         |       ha770c72_0           8 KB  conda-forge
+    libfreetype6-2.14.3        |       h73754d4_0         376 KB  conda-forge
+    libgcc-15.2.0              |      he0feb66_20        1017 KB  conda-forge
+    libgcc-ng-15.2.0           |      h69a702a_20          27 KB  conda-forge
+    libgfortran-15.2.0         |      h69a702a_20          27 KB  conda-forge
+    libgfortran5-15.2.0        |      h68bc16d_20         2.4 MB  conda-forge
+    libglib-2.88.2             |       h0d30a3d_0         4.5 MB  conda-forge
+    libharfbuzz-14.2.1         |       h17a8019_1         1.2 MB  conda-forge
+    libjpeg-turbo-3.2.0        |       hb03c661_0         638 KB  conda-forge
+    libntlm-1.8                |       hb9d3cd8_0          33 KB  conda-forge
+    libpng-1.6.58              |       h421ea60_0         310 KB  conda-forge
+    libpq-18.4                 |       hd5a49e9_1         2.6 MB  conda-forge
+    libraqm-0.10.5             |       h6406941_1          29 KB  conda-forge
+    librdkit-2026.03.4         |       h72e46c9_0         9.9 MB  conda-forge
+    libsqlite-3.53.3           |       h0c1763c_0         940 KB  conda-forge
+    libstdcxx-15.2.0           |      h934c35e_20         5.6 MB  conda-forge
+    libstdcxx-ng-15.2.0        |      hdf11a46_20          28 KB  conda-forge
+    libuuid-2.42.2             |       h5347b49_0          39 KB  conda-forge
+    matplotlib-base-3.11.1     |  py311h0a88c4d_0         8.6 MB  conda-forge
+    numpy-2.4.6                |  py311h2e04523_0         9.0 MB  conda-forge
+    openldap-2.6.13            |       hbde042b_0         768 KB  conda-forge
+    pandas-3.0.3               |  py311h8032f78_0        14.5 MB  conda-forge
+    pcre2-10.47                |       haa7fec5_0         1.2 MB  conda-forge
+    pillow-12.3.0              |  py311hf88fc01_0         1.0 MB  conda-forge
+    pixman-0.46.4              |       h54a6638_2         367 KB  conda-forge
+    pycairo-1.29.0             |  py311hc1a9592_1         117 KB  conda-forge
+    python-3.11.6              |hab00c5b_0_cpython        29.3 MB  conda-forge
+    python_abi-3.11            |          8_cp311           7 KB  conda-forge
+    rdkit-2026.03.4            |  py311h361cc50_0        19.6 MB  conda-forge
+    reportlab-5.0.0            |     pyhc364b38_0         1.6 MB  conda-forge
+    rlpycairo-0.4.0            |     pyh6c17108_0          15 KB  conda-forge
+    sqlalchemy-2.0.51          |  py311haee01d2_0         3.6 MB  conda-forge
+    unicodedata2-17.0.1        |  py311h49ec1c0_0         400 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:       142.3 MB
+
+The following NEW packages will be INSTALLED:
+
+  brotli             conda-forge/linux-64::brotli-1.2.0-hed03a55_1 
+  brotli-bin         conda-forge/linux-64::brotli-bin-1.2.0-hb03c661_1 
+  cairo              conda-forge/linux-64::cairo-1.18.4-he90730b_1 
+  charset-normalizer conda-forge/noarch::charset-normalizer-3.4.9-pyhd8ed1ab_0 
+  contourpy          conda-forge/linux-64::contourpy-1.3.3-py311h724c32c_4 
+  cycler             conda-forge/noarch::cycler-0.12.1-pyhcf101f3_2 
+  cyrus-sasl         conda-forge/linux-64::cyrus-sasl-2.1.28-hac629b4_1 
+  eigen-abi          conda-forge/linux-64::eigen-abi-5.0.1.80-hf414acd_0 
+  font-ttf-dejavu-s~ conda-forge/noarch::font-ttf-dejavu-sans-mono-2.37-hab24e00_0 
+  font-ttf-inconsol~ conda-forge/noarch::font-ttf-inconsolata-3.000-h77eed37_0 
+  font-ttf-source-c~ conda-forge/noarch::font-ttf-source-code-pro-2.038-h77eed37_0 
+  font-ttf-ubuntu    conda-forge/noarch::font-ttf-ubuntu-0.83-h77eed37_3 
+  fontconfig         conda-forge/linux-64::fontconfig-2.18.2-h27c8c51_0 
+  fonts-conda-ecosy~ conda-forge/noarch::fonts-conda-ecosystem-1-0 
+  fonts-conda-forge  conda-forge/noarch::fonts-conda-forge-1-hc364b38_1 
+  fonttools          conda-forge/linux-64::fonttools-4.63.0-py311h3778330_0 
+  freetype           conda-forge/linux-64::freetype-2.14.3-ha770c72_0 
+  freetype-py        conda-forge/noarch::freetype-py-2.3.0-pyhd8ed1ab_0 
+  fribidi            conda-forge/linux-64::fribidi-1.0.16-hb03c661_0 
+  graphite2          conda-forge/linux-64::graphite2-1.3.15-hecca717_0 
+  greenlet           conda-forge/linux-64::greenlet-3.5.4-py311hc665b79_0 
+  icu                conda-forge/linux-64::icu-78.3-h54a6638_2 
+  keyutils           conda-forge/linux-64::keyutils-1.6.3-hb9d3cd8_0 
+  kiwisolver         conda-forge/linux-64::kiwisolver-1.5.0-py311h724c32c_0 
+  krb5               conda-forge/linux-64::krb5-1.22.2-hbde042b_1 
+  lcms2              conda-forge/linux-64::lcms2-2.19.1-h0c24ade_1 
+  lerc               conda-forge/linux-64::lerc-4.1.0-hdb68285_0 
+  libblas            conda-forge/linux-64::libblas-3.11.0-8_h4a7cf45_openblas 
+  libboost           conda-forge/linux-64::libboost-1.90.0-hd24cca6_1 
+  libboost-python    conda-forge/linux-64::libboost-python-1.90.0-py311h1d5f577_1 
+  libbrotlicommon    conda-forge/linux-64::libbrotlicommon-1.2.0-hb03c661_1 
+  libbrotlidec       conda-forge/linux-64::libbrotlidec-1.2.0-hb03c661_1 
+  libbrotlienc       conda-forge/linux-64::libbrotlienc-1.2.0-hb03c661_1 
+  libcblas           conda-forge/linux-64::libcblas-3.11.0-8_h0358290_openblas 
+  libdeflate         conda-forge/linux-64::libdeflate-1.25-h17f619e_0 
+  libedit            conda-forge/linux-64::libedit-3.1.20250104-pl5321h7949ede_0 
+  libfreetype        conda-forge/linux-64::libfreetype-2.14.3-ha770c72_0 
+  libfreetype6       conda-forge/linux-64::libfreetype6-2.14.3-h73754d4_0 
+  libgfortran        conda-forge/linux-64::libgfortran-15.2.0-h69a702a_20 
+  libgfortran5       conda-forge/linux-64::libgfortran5-15.2.0-h68bc16d_20 
+  libglib            conda-forge/linux-64::libglib-2.88.2-h0d30a3d_0 
+  libharfbuzz        conda-forge/linux-64::libharfbuzz-14.2.1-h17a8019_1 
+  libiconv           conda-forge/linux-64::libiconv-1.18-h3b78370_2 
+  libjpeg-turbo      conda-forge/linux-64::libjpeg-turbo-3.2.0-hb03c661_0 
+  liblapack          conda-forge/linux-64::liblapack-3.11.0-8_h47877c9_openblas 
+  liblzma            conda-forge/linux-64::liblzma-5.8.2-hb03c661_0 
+  libntlm            conda-forge/linux-64::libntlm-1.8-hb9d3cd8_0 
+  libopenblas        conda-forge/linux-64::libopenblas-0.3.33-pthreads_h94d23a6_0 
+  libpng             conda-forge/linux-64::libpng-1.6.58-h421ea60_0 
+  libpq              conda-forge/linux-64::libpq-18.4-hd5a49e9_1 
+  libraqm            conda-forge/linux-64::libraqm-0.10.5-h6406941_1 
+  librdkit           conda-forge/linux-64::librdkit-2026.03.4-h72e46c9_0 
+  libsqlite          conda-forge/linux-64::libsqlite-3.53.3-h0c1763c_0 
+  libstdcxx-ng       conda-forge/linux-64::libstdcxx-ng-15.2.0-hdf11a46_20 
+  libtiff            conda-forge/linux-64::libtiff-4.7.1-h9d88235_1 
+  libwebp-base       conda-forge/linux-64::libwebp-base-1.6.0-hd42ef1d_0 
+  libxcrypt          conda-forge/linux-64::libxcrypt-4.4.36-hd590300_1 
+  matplotlib-base    conda-forge/linux-64::matplotlib-base-3.11.1-py311h0a88c4d_0 
+  munkres            conda-forge/noarch::munkres-1.1.4-pyhd8ed1ab_1 
+  numpy              conda-forge/linux-64::numpy-2.4.6-py311h2e04523_0 
+  openjpeg           conda-forge/linux-64::openjpeg-2.5.4-h55fea9a_0 
+  openldap           conda-forge/linux-64::openldap-2.6.13-hbde042b_0 
+  pandas             conda-forge/linux-64::pandas-3.0.3-py311h8032f78_0 
+  pcre2              conda-forge/linux-64::pcre2-10.47-haa7fec5_0 
+  pillow             conda-forge/linux-64::pillow-12.3.0-py311hf88fc01_0 
+  pixman             conda-forge/linux-64::pixman-0.46.4-h54a6638_2 
+  pycairo            conda-forge/linux-64::pycairo-1.29.0-py311hc1a9592_1 
+  pyparsing          conda-forge/noarch::pyparsing-3.3.2-pyhcf101f3_0 
+  python-dateutil    conda-forge/noarch::python-dateutil-2.9.0.post0-pyhe01879c_2 
+  python_abi         conda-forge/noarch::python_abi-3.11-8_cp311 
+  qhull              conda-forge/linux-64::qhull-2020.2-h434a139_5 
+  rdkit              conda-forge/linux-64::rdkit-2026.03.4-py311h361cc50_0 
+  reportlab          conda-forge/noarch::reportlab-5.0.0-pyhc364b38_0 
+  rlpycairo          conda-forge/noarch::rlpycairo-0.4.0-pyh6c17108_0 
+  six                conda-forge/noarch::six-1.17.0-pyhe01879c_1 
+  sqlalchemy         conda-forge/linux-64::sqlalchemy-2.0.51-py311haee01d2_0 
+  typing-extensions  conda-forge/noarch::typing-extensions-4.16.0-h69aa097_0 
+  typing_extensions  conda-forge/noarch::typing_extensions-4.16.0-pyhcf101f3_0 
+  unicodedata2       conda-forge/linux-64::unicodedata2-17.0.1-py311h49ec1c0_0 
+  xorg-libice        conda-forge/linux-64::xorg-libice-1.1.2-hb9d3cd8_0 
+  xorg-libsm         conda-forge/linux-64::xorg-libsm-1.2.6-he73a12e_0 
+  xorg-libxext       conda-forge/linux-64::xorg-libxext-1.3.7-hb03c661_0 
+  xorg-libxrender    conda-forge/linux-64::xorg-libxrender-0.9.12-hb9d3cd8_0 
+  zlib-ng            conda-forge/linux-64::zlib-ng-2.3.3-hceb46e0_1 
+  zstd               conda-forge/linux-64::zstd-1.5.7-hb78ec9c_6 
+
+The following packages will be UPDATED:
+
+  ca-certificates    pkgs/main/linux-64::ca-certificates-2~ --> conda-forge/noarch::ca-certificates-2026.7.22-hbd8a1cb_0 
+  libffi                 pkgs/main::libffi-3.4.8-h06d3fd0_3 --> conda-forge::libffi-3.5.2-h3435931_0 
+  libgcc                pkgs/main::libgcc-15.2.0-h69a1729_8 --> conda-forge::libgcc-15.2.0-he0feb66_20 
+  libgcc-ng          pkgs/main::libgcc-ng-15.2.0-h166f726_8 --> conda-forge::libgcc-ng-15.2.0-h69a702a_20 
+  libstdcxx          pkgs/main::libstdcxx-15.2.0-h39759b7_8 --> conda-forge::libstdcxx-15.2.0-h934c35e_20 
+  libuuid              pkgs/main::libuuid-1.41.5-h5eee18b_0 --> conda-forge::libuuid-2.42.2-h5347b49_0 
+  openssl               pkgs/main::openssl-3.5.7-h1b28b03_0 --> conda-forge::openssl-3.6.3-h35e630c_0 
+
+The following packages will be SUPERSEDED by a higher-priority channel:
+
+  python               pkgs/main::python-3.11.15-h17756b0_1 --> conda-forge::python-3.11.6-hab00c5b_0_cpython 
+
+
+Proceed ([y]/n)? 
+
+Downloading and Extracting Packages: ...working...python-3.11.6        | 29.3 MB   |            |   0% 
+rdkit-2026.03.4      | 19.6 MB   |            |   0% [A
+
+pandas-3.0.3         | 14.5 MB   |            |   0% [A[A
+
+
+icu-78.3             | 13.8 MB   |            |   0% [A[A[A
+
+
+
+librdkit-2026.03.4   | 9.9 MB    |            |   0% [A[A[A[A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    |            |   0% [A[A[A[A[A
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    |            |   0% [A[A[A[A[A[A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    |            |   0% [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    |            |   0% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    |            |   0% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+fonttools-4.63.0     | 2.9 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+libpq-18.4           | 2.6 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+libgfortran5-15.2.0  | 2.4 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+reportlab-5.0.0      | 1.6 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libharfbuzz-14.2.1   | 1.2 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pcre2-10.47          | 1.2 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pillow-12.3.0        | 1.0 MB    |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 1017 KB   |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   |            |   0% 
+
+pandas-3.0.3         | 14.5 MB   |            |   0% [A[A
+
+
+icu-78.3             | 13.8 MB   |            |   0% [A[A[A
+rdkit-2026.03.4      | 19.6 MB   |            |   0% [Apython-3.11.6        | 29.3 MB   | 1          |   1% 
+
+pandas-3.0.3         | 14.5 MB   | 5          |   5% [A[A
+
+
+icu-78.3             | 13.8 MB   | 4          |   4% [A[A[A
+rdkit-2026.03.4      | 19.6 MB   | 2          |   3% [Apython-3.11.6        | 29.3 MB   | 2          |   2% 
+
+
+
+librdkit-2026.03.4   | 9.9 MB    |            |   0% [A[A[A[A
+
+pandas-3.0.3         | 14.5 MB   | #          |  10% [A[A
+
+
+icu-78.3             | 13.8 MB   | 6          |   7% [A[A[A
+
+
+
+librdkit-2026.03.4   | 9.9 MB    |            |   1% [A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | 5          |   5% [Apython-3.11.6        | 29.3 MB   | 3          |   4% 
+
+pandas-3.0.3         | 14.5 MB   | ##8        |  28% [A[A
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | ###1       |  32% [A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | #9         |  19% [A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #2         |  12% [Apython-3.11.6        | 29.3 MB   | #          |  11% 
+
+pandas-3.0.3         | 14.5 MB   | ####5      |  46% [A[Apython-3.11.6        | 29.3 MB   | #4         |  15% 
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | ####9      |  50% [A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #5         |  16% [A
+
+
+icu-78.3             | 13.8 MB   | ##4        |  25% [A[A[A
+
+pandas-3.0.3         | 14.5 MB   | #####7     |  58% [A[Apython-3.11.6        | 29.3 MB   | ##         |  20% 
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | #######6   |  77% [A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | ##1        |  22% [A
+
+
+icu-78.3             | 13.8 MB   | ###3       |  33% [A[A[A
+
+pandas-3.0.3         | 14.5 MB   | #######4   |  75% [A[A
+rdkit-2026.03.4      | 19.6 MB   | ##7        |  27% [A
+
+
+icu-78.3             | 13.8 MB   | ####1      |  41% [A[A[Apython-3.11.6        | 29.3 MB   | ##4        |  24% 
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | #########6 |  96% [A[A[A[A
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | ########## | 100% [A[A[A[A
+
+pandas-3.0.3         | 14.5 MB   | ########7  |  88% [A[A
+rdkit-2026.03.4      | 19.6 MB   | ###2       |  32% [A
+
+
+icu-78.3             | 13.8 MB   | ####8      |  48% [A[A[Apython-3.11.6        | 29.3 MB   | ##8        |  28% 
+rdkit-2026.03.4      | 19.6 MB   | ###5       |  36% [A
+
+
+icu-78.3             | 13.8 MB   | #####3     |  54% [A[A[A
+
+pandas-3.0.3         | 14.5 MB   | #########8 |  99% [A[Apython-3.11.6        | 29.3 MB   | ###1       |  31% 
+rdkit-2026.03.4      | 19.6 MB   | ###9       |  39% [A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    |            |   0% [A[A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | #####9     |  59% [A[A[A
+
+pandas-3.0.3         | 14.5 MB   | ########## | 100% [A[Apython-3.11.6        | 29.3 MB   | ###4       |  35% 
+rdkit-2026.03.4      | 19.6 MB   | ####9      |  49% [A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | ##7        |  27% [A[A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | ######3    |  63% [A[A[Apython-3.11.6        | 29.3 MB   | ###7       |  38% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    |            |   0% [A[A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #####4     |  54% [A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | ####3      |  43% [A[A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | #######8   |  78% [A[A[Apython-3.11.6        | 29.3 MB   | ####1      |  42% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | #8         |  19% [A[A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #####9     |  59% [A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | #####8     |  59% [A[A[A[A[A
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ###2       |  33% [A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | ####4      |  45% 
+rdkit-2026.03.4      | 19.6 MB   | ######3    |  64% [A
+
+
+icu-78.3             | 13.8 MB   | ########5  |  86% [A[A[A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | #######5   |  75% [A[A[A[A[Apython-3.11.6        | 29.3 MB   | ####8      |  49% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ####4      |  45% [A[A[A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | #########2 |  92% [A[A[A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | #########  |  90% [A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | ######8    |  68% [Apython-3.11.6        | 29.3 MB   | #####6     |  56% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ######3    |  63% [A[A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #######4   |  75% [Apython-3.11.6        | 29.3 MB   | ######4    |  65% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ########8  |  89% [A[A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | ########4  |  84% [A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | ########## | 100% [A[A[A[A[Apython-3.11.6        | 29.3 MB   | #######    |  70% 
+rdkit-2026.03.4      | 19.6 MB   | #########  |  90% [A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    |            |   0% [A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | #######7   |  77% 
+
+
+icu-78.3             | 13.8 MB   | ########## | 100% [A[A[A
+
+
+icu-78.3             | 13.8 MB   | ########## | 100% [A[A[A
+rdkit-2026.03.4      | 19.6 MB   | #########7 |  98% [A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    | #6         |  17% [A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | ########2  |  83% 
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ########## | 100% [A[A[A[A[A[A
+rdkit-2026.03.4      | 19.6 MB   | ########## | 100% [A
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    |            |   0% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    |            |   1% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    | ######1    |  61% [A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | ########7  |  88% 
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | ##8        |  28% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    |            |   0% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    | ####9      |  49% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A[A[A[A[A[A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | #########4 |  95% 
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | #####4     |  54% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    | ##5        |  25% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    | ########8  |  88% [A[A[A[A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | #########9 | 100% 
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | #######6   |  76% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    | ####4      |  45% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+fonttools-4.63.0     | 2.9 MB    |            |   1% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    | ########4  |  85% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+libpq-18.4           | 2.6 MB    |            |   1% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | ########## | 100% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | ########## | 100% [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+libgfortran5-15.2.0  | 2.4 MB    |            |   1% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+reportlab-5.0.0      | 1.6 MB    |            |   1% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+fonttools-4.63.0     | 2.9 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+fonttools-4.63.0     | 2.9 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+libpq-18.4           | 2.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libharfbuzz-14.2.1   | 1.2 MB    | 1          |   1% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+libgfortran5-15.2.0  | 2.4 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pcre2-10.47          | 1.2 MB    | 1          |   1% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+reportlab-5.0.0      | 1.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libharfbuzz-14.2.1   | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pillow-12.3.0        | 1.0 MB    | 1          |   2% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pcre2-10.47          | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 1017 KB   | 1          |   2% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pillow-12.3.0        | 1.0 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | ########## | 100% 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 1017 KB   | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+librdkit-2026.03.4   | 9.9 MB    | ########## | 100% [A[A[A[A
+
+
+icu-78.3             | 13.8 MB   | ########## | 100% [A[A[A
+
+
+
+
+
+matplotlib-base-3.11 | 8.6 MB    | ########## | 100% [A[A[A[A[A[A
+
+
+
+
+numpy-2.4.6          | 9.0 MB    | ########## | 100% [A[A[A[A[A
+
+
+
+
+
+
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+libboost-1.90.0      | 3.1 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+sqlalchemy-2.0.51    | 3.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+libglib-2.88.2       | 4.5 MB    | ########## | 100% [A[A[A[A[A[A[A[A
+
+pandas-3.0.3         | 14.5 MB   | ########## | 100% [A[A
+rdkit-2026.03.4      | 19.6 MB   | ########## | 100% [A
+
+
+
+
+
+
+
+
+
+
+
+
+libgfortran5-15.2.0  | 2.4 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+libgfortran5-15.2.0  | 2.4 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+reportlab-5.0.0      | 1.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+reportlab-5.0.0      | 1.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libharfbuzz-14.2.1   | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libharfbuzz-14.2.1   | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+fonttools-4.63.0     | 2.9 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pcre2-10.47          | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pcre2-10.47          | 1.2 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pillow-12.3.0        | 1.0 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pillow-12.3.0        | 1.0 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 1017 KB   | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libgcc-15.2.0        | 1017 KB   | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ... (more hidden) ...[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+libpq-18.4           | 2.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+libpq-18.4           | 2.6 MB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[Apython-3.11.6        | 29.3 MB   | ########## | 100% 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A                                                     
+                                                     [A
+
+                                                     [A[A
+
+
+                                                     [A[A[A
+
+
+
+                                                     [A[A[A[A
+
+
+
+
+                                                     [A[A[A[A[A
+
+
+
+
+
+                                                     [A[A[A[A[A[A
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+[A
+
+[A[A
+
+
+[A[A[A
+
+
+
+[A[A[A[A
+
+
+
+
+[A[A[A[A[A
+
+
+
+
+
+[A[A[A[A[A[A
+
+
+
+
+
+
+[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+[A
+
+[A[A
+
+
+[A[A[A
+
+
+
+[A[A[A[A
+
+
+
+
+[A[A[A[A[A
+
+
+
+
+
+[A[A[A[A[A[A
+
+
+
+
+
+
+[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+[A[A[A[A[A[A[A[A[A[A[A[A done
+Preparing transaction: / - \ | / - \ | / - \ | / - \ | / - \ | / done
+Verifying transaction: \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ done
+Executing transaction: / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / done
