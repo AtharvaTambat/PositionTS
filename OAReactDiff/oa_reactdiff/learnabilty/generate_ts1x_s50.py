@@ -57,7 +57,6 @@ config = dict(
 
 print("loading ddpm trainer...", flush=True)
 device = torch.device("cuda")
-# tspath = "/home/ubuntu/efs/2Dto3D_ReactGen/oa_reactdiff/trainer/ckpt/TSDiffusion-TS1x"
 # Directory holding the trained checkpoints: the --checkpoint-root passed to
 # trainer/train.py (default "checkpoint"), e.g. "../trainer/checkpoint".
 tspath = ""
