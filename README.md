@@ -8,6 +8,8 @@ Benchmark of machine-learning methods for 3D reaction transition-state (TS) pred
 | `react-ot/` | React-OT — Schrödinger-bridge / optimal-transport TS generator | PyTorch Lightning |
 | `TS-GAN/` | TS-GAN — conditional GAN over Coulomb-matrix images | TensorFlow 2 (Keras) |
 | `ts_gen/` | ts_gen — graph-to-coordinates GNN | TensorFlow 1.x |
+| `neuralneb/` | NeuralNEB — PaiNN potential inside a nudged-elastic-band search | PyTorch |
+| `evaluation/` | shared evaluation, metric and dataset-analysis scripts (not a baseline) | — |
 
 Each method needs its own environment; their framework versions conflict.
 
@@ -239,3 +241,60 @@ sbatch ./run.slurm tsgen predict_new.py --reactants … --products … --checkpo
 - `predict.py` is superseded by `predict_new.py`, which is what every shell recipe invokes.
 - Upstream's `data/` (five SDFs) and `log/2layers_256hs_3its/` (the pretrained checkpoint) are absent from this tree, so training data and the shipped model must be obtained from upstream.
 - The notebook's stored outputs come from upstream's original run (TensorFlow deprecation warnings); the home-directory prefix in them was replaced with `<conda>`, and an author-added kernel-crash error output was removed.
+
+---
+
+## NeuralNEB
+
+Unlike the generative baselines, NeuralNEB does not learn a transition state directly: it trains a PaiNN interatomic potential and then runs a nudged-elastic-band search per reaction. Upstream is `gitlab.com/matschreiner/neuralneb` (Mathias Schreiner); install with `pip install -e .`.
+
+```bash
+cd neuralneb
+python scripts/download_qm9x.py data          # fetch qm9x.db
+sbatch ./run.slurm oa2 scripts/train.py       # train the PaiNN potential
+```
+
+`run.slurm` is the single launcher, replacing five near-identical wrappers (`script_{a40,l40,dgx}.slurm` and two `_logging` variants). Beyond the shared `USE_SRUN`, it takes:
+
+- `LOG_TO_FILE=0` — stream output to the job's stdout instead of `<script>_<jobid>_output.log`. This is what the `_logging` suffix used to select.
+- `CONDA_SH=<path>` — source a specific conda profile script, replacing a hardcoded absolute path to one user's miniconda install.
+
+### Running the NEB search over a dataset
+
+One NEB job per reaction, throttled so only a few queue at once:
+
+```bash
+cd neuralneb
+./run_all.sh rgd1                     # full test split
+./run_all.sh transition1x --permuted  # atom-order-permuted split
+PARTITION=<queue> MAX_JOBS=8 ./run_all.sh rgdy
+```
+
+This replaces four copies of the same 82-line submitter that differed only in three path lines. `<dataset>` is `transition1x`, `isomer`, `rgd1`, `rgdx` or `rgdy`; `--permuted` switches from `$DATA_ROOT/<dataset>/xyz_files/test_split/` to `$PERMUTED_ROOT/<dataset>_splits/xyz_data/` and appends `_permd` to the output directory. `DATA_ROOT`, `PERMUTED_ROOT`, `OUTPUT_ROOT`, `CONDA_ENV`, `PARTITION` and `MAX_JOBS` are all environment-overridable. Progress is appended to `progress_<dataset>.log`, and SLURM's own `.out`/`.err` files are suppressed since `run.slurm` writes its own log.
+
+`scripts/` holds three NEB drivers — `neb.py` takes two `.xyz` files positionally, `neb_new.py` takes `--reactant_dir`/`--product_dir`, and `neb_new_2.py` is the one `run_all.sh` submits. They are genuinely different implementations, not copies.
+
+## evaluation
+
+Shared scripts that turn generated geometries into the numbers reported in the paper. Not a baseline, so it has no upstream. `evaluation/run.slurm` is its single launcher (replacing three wrappers plus two more under `generalization/tsgan/trained_rgdx/`).
+
+```bash
+cd evaluation
+sbatch ./run.slurm oa2 evaluate.py
+```
+
+| Script | Role |
+|---|---|
+| `evaluate.py`, `evaluate2.py`, `evaluate3.py`, `evaluate_multiple.py` | RMSD and energy error over a directory of generated structures; the numbered variants differ in which inputs and reference sets they read |
+| `evaluate_shuffle_ts.py` | the atom-order-permutation comparison |
+| `metrics.py`, `get_median.py` | parse a run's log file and report medians |
+| `rmsd.py` | `rmsd_core` / `dmae_core` — the RMSD and D-MAE implementations |
+| `generate_ts.py`, `D2C.py` | reconstruct 3D coordinates from a predicted distance/Coulomb matrix |
+| `geomopt.py` | saddle-point optimisation, Hessian and negative-eigenvalue counting |
+| `flagger.py` | screens generated `.xyz` files for implausible geometries |
+| `shuffle_TS.py`, `make_permuted_pkl.py`, `toxify.py` | build the permuted copies of a test split |
+| `mw.py`, `calculate_mw.py`, `n_heavy_atoms.py`, `xyz2mol.py` | dataset analytics — molecular weight and heavy-atom counts |
+| `ts_shuffling/*.json` | per-dataset permutation records, keyed by `entry_<n>.xyz` |
+| `gen_ts.sh` | the recorded generation commands, with paths via `DATA_ROOT` / `INFERENCE_ROOT` |
+
+Note `metrics.py` and `get_median.py` extract a path from the log text with a `/home/...` regex, so they expect logs produced on the original cluster layout.
