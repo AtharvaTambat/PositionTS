@@ -1,0 +1,39 @@
+=========================================
+Job started at: Mon Apr 13 21:41:56 IST 2026
+Running on node: cn43-l40.prajna.iitb.ac.in
+Job ID: 96489
+Number of GPUs allocated: 1
+GPUs allocated: 0
+GPU Memory Status
+Mon Apr 13 21:41:59 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.86.15              Driver Version: 570.86.15      CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    Off |   00000000:C0:00.0 Off |                    0 |
+| N/A   31C    P0             82W /  350W |       1MiB /  46068MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Conda Environment: oa2
+Python Script: generate_rgdx_s10.py
+=========================================
+
+Activating Conda environment: oa2
+Running Python script...
+Logging output to: generate_rgdx_s10_96489_output.log
+Deactivating Conda environment...
+
+=========================================
+Job finished at: Mon Apr 13 22:45:33 IST 2026
+=========================================
