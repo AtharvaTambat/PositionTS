@@ -96,15 +96,15 @@ Submit from the directory containing the Python script; the job runs in `$SLURM_
 
 ```bash
 cd OAReactDiff/oa_reactdiff/trainer
-sbatch ../run.slurm oa_reactdiff train.py --dataset rgd1                          # a40, 48h (defaults)
-sbatch --partition=l40 --qos=l40 ../run.slurm oa_reactdiff train.py --dataset iso
-sbatch --partition=dgx --qos=dgx -t 120:00:00 ../run.slurm oa_reactdiff train.py --dataset rgdy
+sbatch ../run.slurm oa_reactdiff train.py --dataset rgd1                     # cluster default queue, 48h
+sbatch --partition=<partition> --qos=<qos> ../run.slurm oa_reactdiff train.py --dataset iso
+sbatch --partition=<partition> -t 120:00:00 ../run.slurm oa_reactdiff train.py --dataset rgdy
 
 cd ../learnabilty
 USE_SRUN=0 sbatch ../run.slurm oa_reactdiff generate_rgd1.py
 ```
 
-Defaults are `-N 1 --ntasks-per-node=1 --partition=a40 --qos=a40 --gres=gpu:1 --mem-per-cpu=60G -t 48:00:00`; `sbatch` command-line options override them, so the GPU type is a submit-time choice. `USE_SRUN=0` calls `python` directly instead of through `srun`. Output goes to `<script>_<jobid>_output.log` in the submit directory.
+The script requests `-N 1 --ntasks-per-node=1 --gres=gpu:1 --mem-per-cpu=60G -t 48:00:00`. Partition and QoS are site-specific and deliberately unset, so jobs go to the cluster default queue; pass `--partition` / `--qos` per submission, since `sbatch` command-line options take precedence over the in-file directives. `USE_SRUN=0` calls `python` directly instead of through `srun`. Output goes to `<script>_<jobid>_output.log` in the submit directory.
 
 ### Notes
 

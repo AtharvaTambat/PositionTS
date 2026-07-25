@@ -4,8 +4,6 @@
 #####################################
 #SBATCH -N 1                            # Number of Nodes
 #SBATCH --ntasks-per-node=1             # Number of cores per node.
-#SBATCH --partition=a40                 # Partition (GPU in this case).
-#SBATCH --qos=a40
 #SBATCH --gres=gpu:1
 #SBATCH --mem-per-cpu=60G
 #SBATCH -J OAReactDiff                  # Job Name. CHANGE as needed.
@@ -18,10 +16,11 @@
 # Submit from the directory containing PYTHON_SCRIPT (trainer/ or learnabilty/);
 # the job runs in $SLURM_SUBMIT_DIR.
 #
-# The directives above default to the a40 partition for 48h. sbatch command-line
-# options take precedence over them, so a different GPU is a submit-time choice:
-#   sbatch --partition=l40 --qos=l40              ../run.slurm my_env train.py --dataset rgd1
-#   sbatch --partition=dgx --qos=dgx -t 120:00:00 ../run.slurm my_env train.py --dataset rgd1
+# Partition and QoS are site-specific and deliberately unset, so jobs land on the
+# cluster default. Select them per submission -- sbatch command-line options take
+# precedence over the directives above, so walltime can be raised the same way:
+#   sbatch --partition=<partition> --qos=<qos> ../run.slurm my_env train.py --dataset rgd1
+#   sbatch --partition=<partition> -t 120:00:00 ../run.slurm my_env train.py --dataset rgd1
 #
 # Set USE_SRUN=0 to call python directly instead of through srun.
 
