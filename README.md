@@ -38,13 +38,15 @@ python train.py --help                                  # all options
 | `--data-root` / `--datadir` | path | where the split directories live |
 | `--model` | `leftnet`, `egnn` | backbone |
 | `--project`, `--checkpoint-root`, `--final-checkpoint` | path / name | output locations |
-| `--lr`, `--batch-size`, `--epochs`, `--timesteps`, `--seed`, `--num-workers`, `--eval-epochs`, `--limit-train-batches`, `--limit-val-batches`, `--ema`, `--no-shuffle`, `--wandb-mode` | | training knobs |
+| `--lr`, `--batch-size`, `--epochs`, `--timesteps`, `--noise-schedule`, `--seed`, `--num-workers`, `--eval-epochs`, `--limit-train-batches`, `--limit-val-batches`, `--ema`, `--no-shuffle`, `--version`, `--wandb-mode` | | training knobs |
 
 `--dataset`/`--fraction` resolve to `<data-root>/<stem>_splits/` or `<data-root>/<stem>_subset_<fraction>_splits/`, where `stem` is `transition1x`, `isomer`, `rgd1`, `rgdx` or `rgdy`. Each directory must contain `train_split.pkl` and `validation_split.pkl`. Reduced-supervision runs read a prebuilt subset directory rather than subsampling at runtime, so the 10% and 50% splits — including their validation sets — must be generated beforehand.
 
-Per-epoch checkpoints go to `<checkpoint-root>/<project>/<run name>/`; `--project` defaults to `OAReactDiff_<dataset>[_subset<fraction>][_<permute>_permuted]`. Logging is wandb in `offline` mode by default.
+Per-epoch checkpoints go to `<checkpoint-root>/<project>/<run name>/`; `--project` defaults to `OAReactDiff_<dataset>[_subset<fraction>][_<permute>_permuted]`, with `+` rewritten as `n` (so `product+ts` yields `_productnts_permuted`). Logging is wandb in `offline` mode by default.
 
 `--permute` relabels atoms inside the dataset's `collate_fn`, which serves the training, validation and test dataloaders alike — so it permutes during training, not only at evaluation.
+
+The original per-permutation scripts did not agree on shuffling, so reproducing them needs different flags: the product-only and TS-only forks disabled training-set shuffling, while the product+ts fork shuffled through a `DistributedSampler`. Use `--permute product --no-shuffle`, `--permute ts --no-shuffle`, and `--permute product+ts` (shuffling left on).
 
 ### Generating transition states
 
@@ -67,7 +69,7 @@ tspath = ""        # checkpoint root, e.g. "../trainer/checkpoint"
 pkl_path = ""      # test split, e.g. "../data/rgdx_splits/test_split.pkl"
 ```
 
-`tspath` is the `--checkpoint-root` used at training time; the entry consumed from the `checkpoints` dict is `leftnet_actual_test_best[_<dataset>]`. Only `generate_ts1x.py` ships a working relative `pkl_path`.
+`tspath` is the `--checkpoint-root` used at training time; the entry consumed from the `checkpoints` dict is `leftnet_actual_test_best[_<dataset>]`. Twelve of the fifteen scripts leave `pkl_path` empty; the three Transition1x ones (`generate_ts1x.py`, `_s10`, `_s50`) ship a working relative path.
 
 Output goes to `tmp_<dataset>[_s10|_s50]/entry_<index>.xyz` — one file per reaction, containing the generated TS geometry only. Indices are global across batches, which is why the loader runs with `shuffle=False`; re-running overwrites in place.
 
@@ -108,8 +110,9 @@ The script requests `-N 1 --ntasks-per-node=1 --gres=gpu:1 --mem-per-cpu=60G -t 
 
 ### Notes
 
-- `oa_reactdiff/trainer/train_ts1x.py` and `train_confidence_ts1x.py` are the unmodified upstream entry points.
+- `oa_reactdiff/trainer/train_confidence_ts1x.py` is the unmodified upstream entry point. `train_ts1x.py` is upstream's script **with retuned hyperparameters**: `lr` 2.5e-4 → 5e-4, `bz` 14 → 16, `single_frag_only` True → False, `eval_epochs` 10 → 1, `save_top_k` -1 → 1, DDP forced on, and wandb set to offline. The consolidated `train.py` inherits these values, so reported OA-ReactDiff numbers are not upstream defaults.
 - `oa_reactdiff/trainer/train_rgd1_with_bugged_rmsd.py` is retained deliberately: it labels a run made against the buggy RMSD implementation. The label is the only thing that selects it — the RMSD code is chosen by import, not by the training script.
+- `pretrained-ts1x-diff.ckpt`, which upstream tracks at the `OAReactDiff/` root, is absent here, as are upstream's three `oa_reactdiff/data/transition1x/*.pkl`; `demo.py` and `OA-ReactDiff.ipynb` need them.
 - Two RMSD implementations exist. `oa_reactdiff/analyze/rmsd.py` is the one every trainer imports; it clamps values with `min(rmsd, 1.0)`, falls back to `1.0` on exception, silently returns the matcher `threshold` (`0.5`) when `GeneticOrderMatcher` finds no pair, and passes `ignore_chirality=True`. `oa_reactdiff/analyze/rmsd_corrected.py` removes the clamp, applies a `sqrt(3)` factor, uses `argmin` over candidates and sets `ignore_chirality=False` — but nothing imports it, so reproducing corrected numbers means swapping the module.
 
 ---
@@ -136,11 +139,12 @@ python train.py --help                               # all options
 | `--fraction` | `100`, `50`, `10` | supervision level |
 | `--data-root` / `--datadir` | path | where the split directories live |
 | `--mapping`, `--mapping-initial`, `--nfe`, `--beta-max`, `--power`, `--inv-power`, `--sigma`, `--ts-guess`, `--no-ot-ode`, `--solver`, `--method` | | Schrödinger-bridge settings |
+| `--model` | `leftnet` | backbone |
 | `--pretrain-checkpoint` | path | warm-start model/encoders from a DDPM checkpoint |
 | `--project`, `--version`, `--checkpoint-root`, `--final-checkpoint` | path / name | output locations |
 | `--lr`, `--batch-size`, `--epochs`, `--timesteps`, `--seed`, `--num-workers`, `--eval-epochs`, `--save-epochs`, `--limit-train-batches`, `--limit-val-batches`, `--no-ema`, `--wandb-mode` | | training knobs |
 
-`--dataset`/`--fraction` resolve to `<data-root>/<stem>_splits/` or `<data-root>/<stem>_subset_<fraction>_splits/`, with `stem` in `transition1x`, `isomer`, `rgd1`, `rgdx`, `rgdy`. Each directory must hold `train_split.pkl` and `validation_split.pkl`. Note that `SBModule.setup` in this fork reads those filenames rather than upstream's `train_rpsb_all.pkl` / `valid_rpsb_all.pkl`, and that the splits are shared with the OA-ReactDiff experiments — point `--data-root` at wherever you keep them.
+`--dataset`/`--fraction` resolve to `<data-root>/<stem>_splits/` or `<data-root>/<stem>_subset_<fraction>_splits/`, with `stem` in `transition1x`, `isomer`, `rgd1`, `rgdx`, `rgdy`. Each directory must hold `train_split.pkl` and `validation_split.pkl`. Note that `SBModule.setup` in this fork reads those filenames rather than upstream's `train_rpsb_all.pkl` / `valid_rpsb_all.pkl`. The original runs read the splits from the OA-ReactDiff data tree, so `--data-root` must be set: its default (`reactot/data`) does not exist and the script exits with `FileNotFoundError`.
 
 Per-epoch checkpoints go to `<checkpoint-root>/<project>/<run name>/`, selected on `val_ep_scaled_err`; `--project` defaults to `ReactOT_<dataset>[_subset<fraction>]`. EMA is on by default (`--no-ema` disables it).
 
@@ -194,11 +198,12 @@ Training, dataset construction and prediction are already argument-driven, so th
 
 ```bash
 cd TS-GAN
-sbatch ./run.slurm tsgan train.py --data_path ./data/rgd1_numpy/train/train.npy
+sbatch ./run.slurm tsgan train.py --data_path ./data/rgd1_numpy/train/train.npy \
+    --trained_model_path ./trained_models/rgd1   # required: without it the first checkpoint write raises TypeError
 sbatch --partition=<partition> --qos=<qos> ./run.slurm tsgan predict.py ...
 ```
 
-Three shell files record the command sequences used. Every path in them is parameterized through environment variables, defaulted at the top of each file and overridable from the shell:
+Three shell files record the command sequences used. The absolute paths in them were replaced by environment variables, defaulted at the top of each file and overridable from the shell. Paths that were already repository-relative were left as they were, so not every path in every file is variable-driven — `run.sh` uses none of the four:
 
 ```bash
 DATA_ROOT=…       # dataset splits (shared with the OA-ReactDiff experiments)
@@ -213,7 +218,7 @@ OUTPUT_ROOT=…     # generated transition states
 | `run.sh` | training runs, one line per dataset and supervision level |
 | `run_generate_ts.sh` | prediction runs over the test splits |
 
-`g_model.h5` and `d_model.h5` at the repository root are trained GAN weights that `predict.py` loads. Upstream keeps its own copies under `test_cases/`, which is absent from this tree.
+`g_model.h5` and `d_model.h5` at the repository root are the authors' own trained GAN weights (they match none of upstream's copies under `test_cases/`, which is absent from this tree). `predict.py` takes its generator checkpoint as a command-line argument rather than loading these, and `d_model.h5` is only ever written, by `train.py` — neither is read by any script as it stands.
 
 ## ts_gen
 
@@ -233,4 +238,4 @@ sbatch ./run.slurm tsgen predict_new.py --reactants … --products … --checkpo
 
 - `predict.py` is superseded by `predict_new.py`, which is what every shell recipe invokes.
 - Upstream's `data/` (five SDFs) and `log/2layers_256hs_3its/` (the pretrained checkpoint) are absent from this tree, so training data and the shipped model must be obtained from upstream.
-- The notebook's stored outputs are upstream's original run, so they contain TensorFlow deprecation warnings referencing upstream paths.
+- The notebook's stored outputs come from upstream's original run (TensorFlow deprecation warnings); the home-directory prefix in them was replaced with `<conda>`, and an author-added kernel-crash error output was removed.

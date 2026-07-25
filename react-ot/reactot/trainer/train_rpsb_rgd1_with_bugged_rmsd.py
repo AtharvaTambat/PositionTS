@@ -145,12 +145,9 @@ norms = "_".join([str(x) for x in norm_values])
 run_name = f"{model_type}-{version}-" + str(uuid4()).split("-")[-1]
 
 ## === Fine tuning from a FF ---
-# tspath = "/home/ubuntu/efs/reactot/reactot/trainer/ckpt"
 # checkpoint_path=f"{tspath}/TSDiffusion-TS1x-All/leftnet-8-70b75beeaac1/ddpm-epoch=2074-val-totloss=531.18.ckpt"  # All diffuse/denoise
 # checkpoint_path=f"{tspath}/leftnet-10-d13a2c2bace6_wo_oa_align/ddpm-epoch=719-val-totloss=680.64.ckpt"
 # checkpoint_path=f"{tspath}/TSDiffusion-TS1x-All/RGD1xtb-pretrained-leftnet-0-7962cf1208dc/ddpm-epoch=1279-val-error_t_1=0.237.ckpt"
-# checkpoint_path = "/home/ubuntu/efs/reactot/reactot/trainer/checkpoint/TSDiff/leftnet-xtb-from-dftckpt-cd01d85c5152/ddpm-epoch=189-val-totloss=619.05.ckpt"
-# checkpoint_path = "/home/ubuntu/efs/reactot/reactot/trainer/checkpoint/RPSB-FT-Schedule/leftnet-xtb-c79fcfe0518d/sb-epoch=349-val_ep_scaled_err=0.0483.ckpt"
 checkpoint_path = None
 use_pretrain: bool = False
 
