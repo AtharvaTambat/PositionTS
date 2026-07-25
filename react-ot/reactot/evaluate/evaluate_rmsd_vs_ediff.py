@@ -58,7 +58,10 @@ print(filename)
 
 print("loading ddpm trainer...")
 device = torch.device("cuda")
-tspath = "/anfhome/crduan/diff/TSDiffusion/reactot/trainer/checkpoint/TSDiffusion-TS1x"
+# Directory holding the trained checkpoints, including the wandb project
+# subdirectory: <--checkpoint-root>/<--project> as passed to trainer/train.py,
+# e.g. "../trainer/checkpoint/ReactOT_rgd1/".
+tspath = ""
 checkpoints = {
     "repro": f"{tspath}/Adam-AF-False-LRSNone-EENone-PT-TS1x-Edge-SinEmTrue-L9-Unit128-NF1.0-AGGmean-SubL1-rmHFalse-BZ64-Norm1.0_1.0_1.0-emaFalse-POTrue-Decay0-SFTrue/ddpm-epoch=4379-val-totloss=602.40.ckpt",
     "chiral": f"{tspath}/5edcbc9baced/ddpm-epoch=4159-val-totloss=585.78.ckpt",
@@ -96,7 +99,7 @@ loader = DataLoader(
 )
 _id = uuid4()
 localpath = "tmp/" + str(_id)
-os.makedirs(localpath)
+os.makedirs(localpath, exist_ok=True)
 
 print("evaluating...")
 rmsds, deltaEs = [], []

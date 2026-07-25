@@ -71,7 +71,10 @@ config = dict(
 
 print("loading ddpm trainer...")
 device = torch.device("cuda")
-tspath = "/home/rbs-ml/205030033/ankit/react-ot/reactot/trainer/checkpoint/RPSB-FT-Schedule/"
+# Directory holding the trained checkpoints, including the wandb project
+# subdirectory: <--checkpoint-root>/<--project> as passed to trainer/train.py,
+# e.g. "../trainer/checkpoint/ReactOT_rgd1/".
+tspath = ""
 checkpoints = {
     "repro": f"{tspath}/Adam-AF-False-LRSNone-EENone-PT-TS1x-Edge-SinEmTrue-L9-Unit128-NF1.0-AGGmean-SubL1-rmHFalse-BZ64-Norm1.0_1.0_1.0-emaFalse-POTrue-Decay0-SFTrue/ddpm-epoch=4379-val-totloss=602.40.ckpt",
     "chiral": f"{tspath}/5edcbc9baced/ddpm-epoch=4159-val-totloss=585.78.ckpt",
@@ -96,7 +99,8 @@ ddpm_trainer = ddpm_trainer.to(device)
 
 print("loading dataset...")
 dataset = ProcessedTS1x(
-    pkl_path="/home/rbs-ml/205030033/ankit/ts_project/OAReactDiff/oa_reactdiff/data/rgdy_splits/test_split.pkl",
+    # Test split for this dataset, e.g. "../data/rgdy_splits/test_split.pkl"
+    pkl_path="",
     center=True,
     pad_fragments=0,
     device="cuda",
@@ -115,7 +119,7 @@ loader = DataLoader(
 )
 _id = uuid4()
 localpath = "tmp_rgdy/"
-os.makedirs(localpath)
+os.makedirs(localpath, exist_ok=True)
 
 print("evaluating...")
 for num_repeat in range(config["repeats"]):

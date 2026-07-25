@@ -111,3 +111,77 @@ The script requests `-N 1 --ntasks-per-node=1 --gres=gpu:1 --mem-per-cpu=60G -t 
 - `oa_reactdiff/trainer/train_ts1x.py` and `train_confidence_ts1x.py` are the unmodified upstream entry points.
 - `oa_reactdiff/trainer/train_rgd1_with_bugged_rmsd.py` is retained deliberately: it labels a run made against the buggy RMSD implementation. The label is the only thing that selects it — the RMSD code is chosen by import, not by the training script.
 - Two RMSD implementations exist. `oa_reactdiff/analyze/rmsd.py` is the one every trainer imports; it clamps values with `min(rmsd, 1.0)`, falls back to `1.0` on exception, silently returns the matcher `threshold` (`0.5`) when `GeneticOrderMatcher` finds no pair, and passes `ignore_chirality=True`. `oa_reactdiff/analyze/rmsd_corrected.py` removes the clamp, applies a `sqrt(3)` factor, uses `argmin` over candidates and sets `ignore_chirality=False` — but nothing imports it, so reproducing corrected numbers means swapping the module.
+
+---
+
+## React-OT
+
+Setup follows the method's own README: `conda env create -f env.yaml && conda activate reactot && pip install -e .`. Ignore the top-level `requirements.txt`, which is unrelated.
+
+### Training
+
+All experiments run from `reactot/trainer/train.py`; dataset and supervision level are arguments.
+
+```bash
+cd react-ot/reactot/trainer
+
+python train.py --dataset ts1x                       # full Transition1x
+python train.py --dataset rgd1 --fraction 10         # 10% of RGD1
+python train.py --help                               # all options
+```
+
+| Argument | Values | Purpose |
+|---|---|---|
+| `--dataset` | `ts1x`, `iso`, `rgd1`, `rgdx`, `rgdy` | which benchmark |
+| `--fraction` | `100`, `50`, `10` | supervision level |
+| `--data-root` / `--datadir` | path | where the split directories live |
+| `--mapping`, `--mapping-initial`, `--nfe`, `--beta-max`, `--power`, `--inv-power`, `--sigma`, `--ts-guess`, `--no-ot-ode`, `--solver`, `--method` | | Schrödinger-bridge settings |
+| `--pretrain-checkpoint` | path | warm-start model/encoders from a DDPM checkpoint |
+| `--project`, `--version`, `--checkpoint-root`, `--final-checkpoint` | path / name | output locations |
+| `--lr`, `--batch-size`, `--epochs`, `--timesteps`, `--seed`, `--num-workers`, `--eval-epochs`, `--save-epochs`, `--limit-train-batches`, `--limit-val-batches`, `--no-ema`, `--wandb-mode` | | training knobs |
+
+`--dataset`/`--fraction` resolve to `<data-root>/<stem>_splits/` or `<data-root>/<stem>_subset_<fraction>_splits/`, with `stem` in `transition1x`, `isomer`, `rgd1`, `rgdx`, `rgdy`. Each directory must hold `train_split.pkl` and `validation_split.pkl`. Note that `SBModule.setup` in this fork reads those filenames rather than upstream's `train_rpsb_all.pkl` / `valid_rpsb_all.pkl`, and that the splits are shared with the OA-ReactDiff experiments — point `--data-root` at wherever you keep them.
+
+Per-epoch checkpoints go to `<checkpoint-root>/<project>/<run name>/`, selected on `val_ep_scaled_err`; `--project` defaults to `ReactOT_<dataset>[_subset<fraction>]`. EMA is on by default (`--no-ema` disables it).
+
+### Generating transition states
+
+Four directories hold generation scripts, one per experiment, each pinned to a particular checkpoint and split:
+
+| Directory | Purpose |
+|---|---|
+| `reactot/evaluate/` | main results — `generate_<dataset>.py`, plus `evaluate_res2_<dataset>.py` which also computes DFT energy differences |
+| `reactot/learnability/` | reduced supervision — `generate_<dataset>.py` and `generate_<dataset>_s10.py` |
+| `reactot/permutation/` | atom-order robustness — reads a permuted copy of the test split |
+| `reactot/generalize/trained_<rgd1\|rgdx\|rgdy>/` | cross-regime transfer — a model trained on one RGD1 subset generating for the others |
+
+Each needs two paths filled in, both left as empty strings with the expected value documented inline:
+
+```python
+tspath = ""        # checkpoint dir incl. project subdir, e.g. "../trainer/checkpoint/ReactOT_rgd1/"
+pkl_path = ""      # test split, e.g. "../data/rgd1_splits/test_split.pkl"
+```
+
+Output goes to a per-experiment directory (`tmp_<dataset>/`, `s10_<dataset>/`, …) as `entry_<index>.xyz`.
+
+### Running on SLURM
+
+`reactot/run.slurm` is the single launcher, same contract as the OA-ReactDiff one:
+
+```bash
+cd react-ot/reactot/trainer
+sbatch ../run.slurm reactot train.py --dataset rgd1
+sbatch --partition=<partition> --qos=<qos> ../run.slurm reactot train.py --dataset iso
+
+cd ../evaluate
+USE_SRUN=0 sbatch ../run.slurm reactot generate_rgd1.py
+```
+
+Partition and QoS are unset by design; pass them per submission. `USE_SRUN=0` skips `srun`, which is what the generation and evaluation scripts did.
+
+### Notes
+
+- `reactot/trainer/train_rpsb_ts1x.py` is the unmodified upstream entry point.
+- `reactot/trainer/train_rpsb_rgd1_with_bugged_rmsd.py` is retained deliberately, mirroring the OA-ReactDiff case: it labels a run made against the buggy RMSD implementation (`reactot/analyze/rmsd.py` versus the unimported `rmsd_corrected.py`).
+- `Trainer(replace_sampler_ddp=False)` is preserved as the author ran it. That keyword was removed in PyTorch Lightning 2.0, so it requires a pre-2.0 Lightning despite `env.yaml` pinning 2.4.0.
+- `reactot-pretrained.ckpt`, which upstream tracks at the repository root, is not present here; `evaluation.py` and `appmain.py` need it.

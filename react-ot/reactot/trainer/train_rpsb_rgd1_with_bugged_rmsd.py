@@ -67,7 +67,7 @@ optimizer_config = dict(
 T_0 = 10
 T_mult = 1
 training_config = dict(
-    datadir="/home/rbs-ml/205030033/ankit/ts_project/OAReactDiff/oa_reactdiff/data/rgd1_splits/",
+    datadir="../data/rgd1_splits/",
     remove_h=False,
     bz=14,
     num_workers=0,
@@ -283,7 +283,7 @@ trainer = Trainer(
 )
 
 trainer.fit(ddpm)
-trainer.save_checkpoint("../checkpoints/pretrained-rgdx-epoch2000-bz16-nlayer6-tvt-AG_run.ckpt")
+trainer.save_checkpoint("../checkpoints/pretrained-rgd1-epoch2000-bz16-nlayer6-tvt.ckpt")
 if trainer.logger is not None:
     wandb_logger.experiment.finish()
 else:

@@ -92,7 +92,10 @@ config = dict(
 
 print("loading ddpm trainer...")
 device = torch.device("cuda")
-tspath = "/anfhome/crduan/diff/TSDiffusion/reactot/trainer/checkpoint/TSDiffusion-TS1x"
+# Directory holding the trained checkpoints, including the wandb project
+# subdirectory: <--checkpoint-root>/<--project> as passed to trainer/train.py,
+# e.g. "../trainer/checkpoint/ReactOT_rgd1/".
+tspath = ""
 checkpoints = {
     "leftnet_2074": f"{tspath}-All/leftnet-8-70b75beeaac1/ddpm-epoch=2074-val-totloss=531.18.ckpt",
 }
