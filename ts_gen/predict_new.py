@@ -104,7 +104,7 @@ def save_xyz(coords, mol, filepath):
 def main(args):
 
     if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
+        os.makedirs(args.output_dir, exist_ok=True)
 
     print("Loading data...")
     test_data = load_data(args.reactants, args.products)

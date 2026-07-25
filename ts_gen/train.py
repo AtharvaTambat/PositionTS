@@ -46,7 +46,7 @@ parser.add_option("--save_checkpoint_dir", default=None)
 args, _ = parser.parse_args()
 if args.save_checkpoint_dir is not None:
     if not os.path.exists(args.save_checkpoint_dir):
-        os.makedirs(args.save_checkpoint_dir)
+        os.makedirs(args.save_checkpoint_dir, exist_ok=True)
 
 layers = int(args.layers)
 hidden_size = int(args.hidden_size)
@@ -133,10 +133,10 @@ if args.restore is not None:
 else:
     base_folder = time.strftime(args.save_checkpoint_dir+"/%y%b%d_%I%M%p/", time.localtime())
     if not os.path.exists(base_folder):
-        os.makedirs(base_folder)
+        os.makedirs(base_folder, exist_ok=True)
 
 if not os.path.exists(base_folder):
-    os.makedirs(base_folder)
+    os.makedirs(base_folder, exist_ok=True)
 
 train_ts_file = base_folder + 'train_ts.sdf'
 train_reactant_file = base_folder + 'train_reactants.sdf'

@@ -185,3 +185,52 @@ Partition and QoS are unset by design; pass them per submission. `USE_SRUN=0` sk
 - `reactot/trainer/train_rpsb_rgd1_with_bugged_rmsd.py` is retained deliberately, mirroring the OA-ReactDiff case: it labels a run made against the buggy RMSD implementation (`reactot/analyze/rmsd.py` versus the unimported `rmsd_corrected.py`).
 - `Trainer(replace_sampler_ddp=False)` is preserved as the author ran it. That keyword was removed in PyTorch Lightning 2.0, so it requires a pre-2.0 Lightning despite `env.yaml` pinning 2.4.0.
 - `reactot-pretrained.ckpt`, which upstream tracks at the repository root, is not present here; `evaluation.py` and `appmain.py` need it.
+
+---
+
+## TS-GAN
+
+Training, dataset construction and prediction are already argument-driven, so there is one script per task rather than one per configuration. `TS-GAN/run.slurm` is the single SLURM launcher, replacing the previous `script_{a40,l40,dgx}.slurm` copies; partition and QoS are unset by design.
+
+```bash
+cd TS-GAN
+sbatch ./run.slurm tsgan train.py --data_path ./data/rgd1_numpy/train/train.npy
+sbatch --partition=<partition> --qos=<qos> ./run.slurm tsgan predict.py ...
+```
+
+Three shell files record the command sequences used. Every path in them is parameterized through environment variables, defaulted at the top of each file and overridable from the shell:
+
+```bash
+DATA_ROOT=…       # dataset splits (shared with the OA-ReactDiff experiments)
+PERMUTED_ROOT=…   # atom-order-permuted copies of the splits
+MODEL_ROOT=…      # trained checkpoints
+OUTPUT_ROOT=…     # generated transition states
+```
+
+| File | Purpose |
+|---|---|
+| `create_dataset.sh` | `convert_pkl_to_xyx.py` → `gen_data.py`: split pickles to `.xyz`, then to a Coulomb-matrix `.npy`. `convert_pkl_to_xyx_permd.py` writes the permuted copies. |
+| `run.sh` | training runs, one line per dataset and supervision level |
+| `run_generate_ts.sh` | prediction runs over the test splits |
+
+`g_model.h5` and `d_model.h5` at the repository root are trained GAN weights that `predict.py` loads. Upstream keeps its own copies under `test_cases/`, which is absent from this tree.
+
+## ts_gen
+
+`train.py` and `predict_new.py` are argparse-driven, so no per-configuration copies exist. `ts_gen/run.slurm` is the single launcher (the shell recipes previously referenced `script_*.slurm` files that were never present in this directory).
+
+```bash
+cd ts_gen
+sbatch ./run.slurm tsgen train.py --r_file … --p_file … --ts_file … --hidden_size 256
+sbatch ./run.slurm tsgen predict_new.py --reactants … --products … --checkpoint … --output_dir …
+```
+
+`run.sh` records the training runs and `run_generate_ts.sh` / `run_generate_ts_copy.sh` the prediction runs, using the same `DATA_ROOT` / `PERMUTED_ROOT` / `MODEL_ROOT` / `OUTPUT_ROOT` variables. Both generate recipes are kept: they are not duplicates, differing in which variant is live and in output naming (`isomer_perm` versus `isomer_permd`).
+
+`use_trained_model.ipynb` needs `model_path` filled in — left as an empty string with the expected value documented in the cell above it.
+
+### Notes
+
+- `predict.py` is superseded by `predict_new.py`, which is what every shell recipe invokes.
+- Upstream's `data/` (five SDFs) and `log/2layers_256hs_3its/` (the pretrained checkpoint) are absent from this tree, so training data and the shipped model must be obtained from upstream.
+- The notebook's stored outputs are upstream's original run, so they contain TensorFlow deprecation warnings referencing upstream paths.

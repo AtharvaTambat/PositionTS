@@ -100,7 +100,7 @@ def write_xyz(path, mol, coords, idx):
 def predict(react_sdf, prod_sdf, ckpt, output_dir):
 
     if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+        os.makedirs(output_dir, exist_ok=True)
 
     reactants = load_sdf(react_sdf)
     products  = load_sdf(prod_sdf)
