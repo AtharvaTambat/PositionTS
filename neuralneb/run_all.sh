@@ -17,29 +17,41 @@ set -u
 
 DATASET="${1:-}"
 PERMUTED="${2:-}"
+usage() { echo "Usage: $0 <transition1x|isomer|rgd1|rgdx|rgdy> [--permuted]"; exit 1; }
 case "$DATASET" in
     transition1x|isomer|rgd1|rgdx|rgdy) ;;
-    *) echo "Usage: $0 <transition1x|isomer|rgd1|rgdx|rgdy> [--permuted]"; exit 1 ;;
+    *) usage ;;
+esac
+case "$PERMUTED" in
+    ""|--permuted) ;;
+    *) echo "ERROR: unrecognised second argument '$PERMUTED'"; usage ;;
 esac
 
 DATA_ROOT="${DATA_ROOT:-../ts_gen/data}"
 PERMUTED_ROOT="${PERMUTED_ROOT:-../permuted_data}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-./generated_transition_states}"
 CONDA_ENV="${CONDA_ENV:-oa2}"
+USER="${USER:-$(id -un)}"
 MAX_JOBS="${MAX_JOBS:-4}"
 PARTITION="${PARTITION:-}"
+WALLTIME="${WALLTIME:-48:00:00}"   # the dgx submitters used 120:00:00
+# The originals submitted the non-logging wrapper with output discarded; keep that
+# default so a 1000-reaction sweep does not leave 1000 log files behind.
+export LOG_TO_FILE="${LOG_TO_FILE:-0}"
 
 if [ "$PERMUTED" = "--permuted" ]; then
     PRODUCT_DIR="$PERMUTED_ROOT/${DATASET}_splits/xyz_data/product"
     REACTANT_DIR="$PERMUTED_ROOT/${DATASET}_splits/xyz_data/reactant"
     OUTPUT_DIR="$OUTPUT_ROOT/${DATASET}_permd"
+    SUFFIX="_permd"
 else
     PRODUCT_DIR="$DATA_ROOT/$DATASET/xyz_files/test_split/products"
     REACTANT_DIR="$DATA_ROOT/$DATASET/xyz_files/test_split/reactants"
     OUTPUT_DIR="$OUTPUT_ROOT/$DATASET"
+    SUFFIX=""
 fi
 
-LOG_FILE="progress_${DATASET}${PERMUTED:+_permd}.log"
+LOG_FILE="progress_${DATASET}${SUFFIX}.log"
 mkdir -p "$OUTPUT_DIR"
 touch "$LOG_FILE"
 
@@ -77,6 +89,7 @@ for file in "$REACTANT_DIR"/entry_*.xyz; do
         --output=/dev/null \
         --error=/dev/null \
         --open-mode=append \
+        -t "$WALLTIME" \
         ${PARTITION:+--partition="$PARTITION" --qos="$PARTITION"} \
         ./run.slurm \
         "$CONDA_ENV" scripts/neb_new_2.py \

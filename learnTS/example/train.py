@@ -6,7 +6,7 @@ import pytorch_lightning as pl
 from   pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from   pytorch_lightning.loggers import CSVLogger
 import sys
-sys.path.append('/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/learnts')
+sys.path.append('../learnts')
 from db_ts1x import symbol2number, num_images
 from model import MyModel
 
@@ -45,14 +45,14 @@ if __name__=="__main__":
     grid = np.mgrid[0.0:30.0:301j]
     print(f'start learning :   {args.factor1}, {args.factor2}')
 
-    db = pickle.load(open("/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/learnts/train-db-distance_rgdy_10.pkl",'rb')) ############
+    db = pickle.load(open("../learnts/train-db-distance_rgdy_10.pkl",'rb')) ############
     #db = pickle.load(open('./train-db-fast.pkl','rb'))
     train_db_length =  len(db)
     #loader1 = DataLoader(db, batch_size = args.batch_size, shuffle=True,  num_workers=32)
     loader1 = DataLoader(db, batch_size = args.batch_size, shuffle=True,  collate_fn=partial(my_collate_fn, num_images=num_images, grid = grid, alpha=10.0, duplicate=True),  num_workers=4)
     
     #db = pickle.load(open('./valid-db-fast.pkl','rb'))
-    db = pickle.load(open("/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/learnts/valid-db-distance_rgdy_10.pkl",'rb')) #############
+    db = pickle.load(open("../learnts/valid-db-distance_rgdy_10.pkl",'rb')) #############
     #db, _ = torch.utils.data.random_split(db, [100, len(db)-100])
     valid_db_length =  len(db)
     #loader2 = DataLoader(db,  batch_size = 2*args.batch_size, shuffle=False, num_workers=16)

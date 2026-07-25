@@ -27,7 +27,7 @@
 #   LOG_TO_FILE=0  stream output to the job's stdout instead of a per-run log file
 #   CONDA_SH=path  source a specific conda profile script instead of `conda shell.bash hook`
 
-USE_SRUN="${USE_SRUN:-1}"
+USE_SRUN="${USE_SRUN:-0}"   # the evaluation wrappers ran bare python
 LOG_TO_FILE="${LOG_TO_FILE:-1}"
 
 # Usage Information
@@ -67,17 +67,21 @@ echo "Job started at: $(date)"
 echo "Running on node: $(hostname)"
 echo "Job ID: $SLURM_JOB_ID"
 echo "Partition: $SLURM_JOB_PARTITION"
+echo "Number of GPUs allocated: $(nvidia-smi --list-gpus | wc -l)"
+echo "GPUs allocated: $CUDA_VISIBLE_DEVICES"
+echo "GPU Memory Status"
+nvidia-smi
 echo "Conda Environment: $CONDA_ENV"
 echo "Python Script: $PYTHON_SCRIPT"
 echo "========================================="
 echo
 
 # Initialize conda. Set CONDA_SH if `conda` is not already on PATH.
-if [ -n "$CONDA_SH" ]; then
+eval "$(conda shell.bash hook)" 2>/dev/null
+if [ -n "${CONDA_SH:-}" ]; then
     source "$CONDA_SH"
-else
-    eval "$(conda shell.bash hook)" || { echo "ERROR: Conda initialization failed"; exit 1; }
 fi
+command -v conda >/dev/null || { echo "ERROR: Conda initialization failed"; exit 1; }
 
 echo "Activating Conda environment: $CONDA_ENV"
 conda activate "$CONDA_ENV"

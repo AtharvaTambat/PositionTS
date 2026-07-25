@@ -1,0 +1,3 @@
+[submodule "learnTS/ard_gsm"]
+	path = learnTS/ard_gsm
+	url = https://github.com/cgrambow/ard_gsm.git

@@ -8,8 +8,7 @@ import numpy as np
 from functools import lru_cache
 from tqdm import tqdm
 import sys
-sys.path.append('/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/ard_gsm')
-#sys.path.append('/home/shchoi/activation_energies/cgrambow-ard_gsm-a3141a8/')
+sys.path.append('../ard_gsm')
 symbol2number = {'H':0, 'C':1, 'N':2, 'O':3, 'F':4}
 
 num_images = 1
@@ -278,7 +277,8 @@ if __name__=="__main__":
     import pickle
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--directory", type=str, default="/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_data/rgdy_subset_10_splits/")
+    # split directory, e.g. "../data/rgdy_subset_10_splits/"
+    parser.add_argument("--directory", type=str, default="")
 
     args = parser.parse_args()
     

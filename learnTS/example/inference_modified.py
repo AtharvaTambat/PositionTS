@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import pytorch_lightning as pl
 from   pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 import sys
-sys.path.append('/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/learnts')
+sys.path.append('../learnts')
 from   db_ts1x import symbol2number, DB, my_collate_fn, num_images
 from   model import MyModel
 
@@ -31,7 +31,7 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     grid = np.mgrid[0.0:30.0:301j]
-    db = pickle.load(open('/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy/learnts/test-db-distance_rgdy.pkl','rb'))
+    db = pickle.load(open('../learnts/test-db-distance_rgdy.pkl','rb'))
     db_length =  len(db)
     print(f'LENGTH of DATABASE: {db_length}')
     loader = DataLoader(db, batch_size = args.batch_size, shuffle=False, collate_fn=partial(my_collate_fn, num_images=num_images, grid = grid, alpha=10.0, duplicate=False), num_workers=32)
@@ -82,7 +82,8 @@ if __name__=="__main__":
     dropout_e = 0.5
     num_pair_embedding = 128
 
-    filename = '/home/rbs-ml/215030014/swastik/swastik/PROJECTS/NEB_energy/learnts_baseline_mar26/learnts_rgdy_10/example/lightning_csv_logs/128-2-2-0.4-0.5-0.5-1000.0-0.0-0.0-0.0-0.0-2.00000E-04/version_0/checkpoints/epoch=565-step=7923.ckpt'
+    # Trained checkpoint, e.g. './lightning_csv_logs/<run>/version_0/checkpoints/<name>.ckpt'
+    filename = ''
     model = MyModel(num_pair_embedding, len(grid), num_layers, num_gru_layers=num_gru_layers, gru_dropout = gru_dropout, dropout_d=dropout_d, dropout_e=dropout_e, learning_rate=learning_rate, precision=args.precision, factor=[ factor1, factor2, 0.0, factor2, factor2 ])
     model = model.load_from_checkpoint(checkpoint_path=filename )
     model.filename = 'train_rgdy10_ep565_test_rgdy100.pkl'

@@ -9,6 +9,7 @@ Benchmark of machine-learning methods for 3D reaction transition-state (TS) pred
 | `TS-GAN/` | TS-GAN — conditional GAN over Coulomb-matrix images | TensorFlow 2 (Keras) |
 | `ts_gen/` | ts_gen — graph-to-coordinates GNN | TensorFlow 1.x |
 | `neuralneb/` | NeuralNEB — PaiNN potential inside a nudged-elastic-band search | PyTorch |
+| `learnTS/` | LearnTS — iterative distance-matrix prediction (upstream: Sunghwan Choi) | PyTorch Lightning |
 | `evaluation/` | shared evaluation, metric and dataset-analysis scripts (not a baseline) | — |
 
 Each method needs its own environment; their framework versions conflict.
@@ -256,7 +257,7 @@ sbatch ./run.slurm oa2 scripts/train.py       # train the PaiNN potential
 
 `run.slurm` is the single launcher, replacing five near-identical wrappers (`script_{a40,l40,dgx}.slurm` and two `_logging` variants). Beyond the shared `USE_SRUN`, it takes:
 
-- `LOG_TO_FILE=0` — stream output to the job's stdout instead of `<script>_<jobid>_output.log`. This is what the `_logging` suffix used to select.
+- `LOG_TO_FILE` — defaults to `1`, writing `<script>_<jobid>_output.log` next to the script (so `scripts/train_<jobid>_output.log`), which is what the `_logging` wrappers did. Set `0` to stream to the job's stdout instead, as the plain wrappers did. `run_all.sh` exports `0`, matching the originals it replaces, which discarded per-job output.
 - `CONDA_SH=<path>` — source a specific conda profile script, replacing a hardcoded absolute path to one user's miniconda install.
 
 ### Running the NEB search over a dataset
@@ -270,7 +271,9 @@ cd neuralneb
 PARTITION=<queue> MAX_JOBS=8 ./run_all.sh rgdy
 ```
 
-This replaces four copies of the same 82-line submitter that differed only in three path lines. `<dataset>` is `transition1x`, `isomer`, `rgd1`, `rgdx` or `rgdy`; `--permuted` switches from `$DATA_ROOT/<dataset>/xyz_files/test_split/` to `$PERMUTED_ROOT/<dataset>_splits/xyz_data/` and appends `_permd` to the output directory. `DATA_ROOT`, `PERMUTED_ROOT`, `OUTPUT_ROOT`, `CONDA_ENV`, `PARTITION` and `MAX_JOBS` are all environment-overridable. Progress is appended to `progress_<dataset>.log`, and SLURM's own `.out`/`.err` files are suppressed since `run.slurm` writes its own log.
+This replaces four copies of the same 82-line submitter that differed only in three path lines. `<dataset>` is `transition1x`, `isomer`, `rgd1`, `rgdx` or `rgdy`; `--permuted` switches from `$DATA_ROOT/<dataset>/xyz_files/test_split/` to `$PERMUTED_ROOT/<dataset>_splits/xyz_data/` and appends `_permd` to the output directory. `DATA_ROOT`, `PERMUTED_ROOT`, `OUTPUT_ROOT`, `CONDA_ENV`, `PARTITION` and `MAX_JOBS` are all environment-overridable. Progress is appended to `progress_<dataset>.log` (`progress_<dataset>_permd.log` for a permuted run), and SLURM's own `.out`/`.err` files are suppressed. Walltime defaults to 48h; the two dgx submitters used 120h, so pass `WALLTIME=120:00:00` to match them.
+
+Upstream's `data/` directory is absent from this tree: `data/painn.sd` (the `--model` default of all three NEB drivers), `data/test_reaction/{r,p}.xyz`, `data/models.tar.gz`, `data/t1x_splits.tar.gz` and two `batch*.pkl`. They must be obtained from upstream before any recipe here runs. Note also that `scripts/train.py` and `scripts/neb.py` carry local modifications (split handling, batch size, optimiser) rather than being stock upstream.
 
 `scripts/` holds three NEB drivers — `neb.py` takes two `.xyz` files positionally, `neb_new.py` takes `--reactant_dir`/`--product_dir`, and `neb_new_2.py` is the one `run_all.sh` submits. They are genuinely different implementations, not copies.
 
@@ -280,21 +283,58 @@ Shared scripts that turn generated geometries into the numbers reported in the p
 
 ```bash
 cd evaluation
-sbatch ./run.slurm oa2 evaluate.py
+sbatch ./run.slurm oa2 evaluate.py <reference_dir> <generated_dir>
 ```
+
+`USE_SRUN` defaults to `0` here because every evaluation wrapper ran bare `python`. Note that all of these scripts read positional `sys.argv` arguments rather than using argparse, so each needs its inputs supplied — `evaluate.py` takes a reference folder, `evaluate2/3/_multiple` take two paths, `metrics.py` takes **two** log files.
 
 | Script | Role |
 |---|---|
-| `evaluate.py`, `evaluate2.py`, `evaluate3.py`, `evaluate_multiple.py` | RMSD and energy error over a directory of generated structures; the numbered variants differ in which inputs and reference sets they read |
+| `evaluate.py`, `evaluate2.py`, `evaluate3.py`, `evaluate_multiple.py` | RMSD and energy error over a directory of generated structures. They differ in the generated-file naming they expect (`<stem>_ts.xyz`, `tsgen_idx_<n>.xyz`, `fold_<f>_<stem>.xyz`) and in how the DFT level of theory is parsed out of the output-folder name, so the same folder can yield different reference levels across scripts — pick deliberately. `evaluate3.py` additionally hardcodes skipping entries 318/397/453 |
 | `evaluate_shuffle_ts.py` | the atom-order-permutation comparison |
-| `metrics.py`, `get_median.py` | parse a run's log file and report medians |
+| `get_median.py` | parse one run log and report medians |
+| `metrics.py` | parse **two** logs (reactant-side and product-side), take the element-wise minimum, then report mean, std and RMSE |
 | `rmsd.py` | `rmsd_core` / `dmae_core` — the RMSD and D-MAE implementations |
-| `generate_ts.py`, `D2C.py` | reconstruct 3D coordinates from a predicted distance/Coulomb matrix |
-| `geomopt.py` | saddle-point optimisation, Hessian and negative-eigenvalue counting |
+| `generate_ts.py`, `D2C.py` | reconstruct 3D coordinates from a predicted **distance** matrix (`D2C.job`); `generate_ts.py`'s Coulomb-matrix helper `get_D` is defined but never called |
+| `geomopt.py` | energies, forces, Hessians and negative-eigenvalue counting (`compute_efh`, `count_negative_eig`, `compute_barrier`, `calc_deltaE`); the saddle-point optimisation and IRC routines are present but commented out |
 | `flagger.py` | screens generated `.xyz` files for implausible geometries |
 | `shuffle_TS.py`, `make_permuted_pkl.py`, `toxify.py` | build the permuted copies of a test split |
 | `mw.py`, `calculate_mw.py`, `n_heavy_atoms.py`, `xyz2mol.py` | dataset analytics — molecular weight and heavy-atom counts |
 | `ts_shuffling/*.json` | per-dataset permutation records, keyed by `entry_<n>.xyz` |
+| `atom_data.py` | element data used by `generate_ts.py` |
 | `gen_ts.sh` | the recorded generation commands, with paths via `DATA_ROOT` / `INFERENCE_ROOT` |
 
+Two files are inert: `utils.py` is a stray copy of react-ot's helper and is imported by nothing here, and `calculate_mw.py` uses `sys` without importing it (pre-existing; use `mw.py`).
+
 Note `metrics.py` and `get_median.py` extract a path from the log text with a `/home/...` regex, so they expect logs produced on the original cluster layout.
+
+---
+
+## LearnTS
+
+Predicts a transition-state distance matrix from reactant and product, then reconstructs coordinates. Upstream is `gitlab.com/sunghwan.choi/learnts` (Sunghwan Choi).
+
+`learnTS/ard_gsm` is a submodule pointing at `github.com/cgrambow/ard_gsm`, needed by `learnts/db.py`. It previously had no `.gitmodules`, so clones came up empty; fetch it with:
+
+```bash
+git submodule update --init learnTS/ard_gsm
+```
+
+### Training and inference
+
+`learnTS/run.slurm` is the single launcher, replacing `example/inference.sh` and `example/submit_script.sh`. It carries the same `USE_SRUN` / `LOG_TO_FILE` / `CONDA_SH` toggles as the other launchers, plus `GPUS_PER_TASK` (default 1) for `srun --gpus-per-task`.
+
+```bash
+cd learnTS/example
+./run_train.sh                                    # the recorded training run, 2 GPUs
+sbatch --mem=60G ../run.slurm learnts inference_modified.py
+```
+
+`run_train.sh` holds the hyperparameters that were previously baked into `submit_script.sh` — `--devices 2 --strategy ddp --learning_rate 2e-4 --gru_dropout 0.4 --num_pair_embedding 128 --max_epoch 3000 --gradient_clip_val 1.0 --log_every_n_steps 10 --precision 64` — so the reported configuration stays recorded while the launcher stays generic.
+
+### Notes
+
+- Author additions over upstream: `example/inference_modified.py` and `learnts/db_ts1x.py`; `example/train.py` and `learnts/model.py` are modified upstream files.
+- Paths that pointed into a user's home directory are now relative (`../learnts`, `../ard_gsm`) or empty with the expected value documented: `inference_modified.py`'s checkpoint `filename` and `db_ts1x.py`'s `--directory` default both need filling in.
+- The pickled databases the scripts load (`train-db-distance_<dataset>.pkl`, `valid-…`, `test-…`) are not in the tree; build them with `learnts/db_ts1x.py`.
+- `learnts/db.py` and `learnts/normal_mode_analysis.py` are byte-identical to upstream and still contain the upstream author's own absolute paths, as do the other vendored baselines.
