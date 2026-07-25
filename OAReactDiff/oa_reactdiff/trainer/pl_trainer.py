@@ -180,12 +180,12 @@ class DDPMModule(LightningModule):
             raise NotImplementedError
 
     def train_dataloader(self) -> DataLoader:
-        # train_sampler = DistributedSampler(self.train_dataset, shuffle=True, seed=42)   
+        # train_sampler = DistributedSampler(self.train_dataset, shuffle=True, seed=42)
         return DataLoader(
             self.train_dataset,
             self.training_config["bz"],
             # sampler=train_sampler,
-            shuffle=True,
+            shuffle=self.training_config.get("shuffle", True),
             num_workers=self.training_config["num_workers"],
             collate_fn=self.train_dataset.collate_fn,
         )

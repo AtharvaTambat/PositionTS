@@ -58,16 +58,13 @@ config = dict(
 print("loading ddpm trainer...", flush=True)
 device = torch.device("cuda")
 # tspath = "/home/ubuntu/efs/2Dto3D_ReactGen/oa_reactdiff/trainer/ckpt/TSDiffusion-TS1x"
-tspath = "/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/trainer/checkpoint" 
+# Directory holding the trained checkpoints: the --checkpoint-root passed to
+# trainer/train.py (default "checkpoint"), e.g. "../trainer/checkpoint".
+tspath = ""
 checkpoints = {
     "leftnet_1301": f"{tspath}/OAReactDiff/leftnet-0-b670188b2cee/ddpm-epoch=1301-val-totloss=542.96.ckpt",
     "leftnet_1999": f"{tspath}/OAReactDiff/leftnet-0-31293be7327e/ddpm-epoch=1999-val-totloss=647.19.ckpt",
     "leftnet_711": f"{tspath}/OAReactDiff/leftnet-0-97458639218ats1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=711-val-totloss=552.38.ckpt",
-    "leftnet_at_final": f"/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/checkpoints/pretrained-ts1x-epoch2000-bz16-AT-checked.ckpt",
-    "leftnet_atag_best": f"{tspath}/OAReactDiff/leftnet-0-e1782ceedd16ts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1697-val-totloss=529.11.ckpt",
-    "leftnet_atag_test_best": f"{tspath}/OAReactDiff/leftnet-0-41d30768408dts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1371-val-totloss=537.06.ckpt",
-    "leftnet_atag_test_last": "/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/checkpoints/pretrained-ts1x-epoch2000-bz16-nlayer3-tvt-ATAG.ckpt",
-    "leftnet_atag_test_best2": f"{tspath}/OAReactDiff/leftnet-0-392f3f25df75ts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1697-val-totloss=528.16.ckpt",
     "leftnet_actual_test_best": f"{tspath}/OAReactDiff_ts1x_subset10_limit200/leftnet-0-574742267ea2_2026-04-11_20-29-25/ddpm-epoch=547-val-totloss=560.73.ckpt",
 }
 ddpm_trainer = DDPMModule.load_from_checkpoint(
@@ -101,7 +98,7 @@ loader = DataLoader(
 )
 _id = uuid4()
 localpath = "tmp_transition1x_s10/"
-os.makedirs(localpath)
+os.makedirs(localpath, exist_ok=True)
 for num_repeat in range(config["repeats"]):
     print("num_repeat: ", num_repeat, flush=True)
     for ii, batch in enumerate(loader):

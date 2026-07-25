@@ -3,12 +3,21 @@ import numpy as np
 import torch
 import pickle
 from oa_reactdiff.dataset.base_dataset import BaseDataset, ATOM_MAPPING
+from oa_reactdiff.dataset.toxify import create_permutation_matrix
 
 n_element = len(list(ATOM_MAPPING.keys()))
 FRAG_MAPPING = {
     "reactant": "product",
     "transition_state": "transition_state",
     "product": "reactant",
+}
+
+# Fragment order produced by collate_fn is [reactant, transition_state, product].
+PERMUTED_FRAGMENTS = {
+    "none": (),
+    "product": (2,),
+    "ts": (1,),
+    "product+ts": (1, 2),
 }
 
 
@@ -150,8 +159,16 @@ class ProcessedTS1x_woTest(BaseDataset):
         ]
 
 class ProcessedTS1x():
-    def __init__(self, pkl_path, center=True, pad_fragments=0, device="cpu", **kwargs):
-        
+    def __init__(
+        self,
+        pkl_path,
+        center=True,
+        pad_fragments=0,
+        device="cpu",
+        permute="none",
+        **kwargs,
+    ):
+
         # Load data from pickle file
         with open(pkl_path, "rb") as f:
             self.raw_dataset = pickle.load(f)
@@ -159,6 +176,11 @@ class ProcessedTS1x():
         self.n_fragments = pad_fragments + 3
         self.device = torch.device(device)
         self.n_samples = len(self.raw_dataset)
+        if permute not in PERMUTED_FRAGMENTS:
+            raise KeyError(
+                f"permute must be one of {sorted(PERMUTED_FRAGMENTS)}, got {permute!r}"
+            )
+        self.permuted_fragments = PERMUTED_FRAGMENTS[permute]
     
     def __len__(self):
         return self.n_samples
@@ -169,8 +191,17 @@ class ProcessedTS1x():
             batch[x] = torch.tensor(batch[x], device=self.device)
         return batch
     
-    @staticmethod
-    def collate_fn(batch):
+    def permute_fragments(self, out):
+        """Relabel atoms of the selected fragments with one shared permutation."""
+        if not self.permuted_fragments:
+            return
+        pms = create_permutation_matrix(out[self.permuted_fragments[0]]["size"])
+        for idx in self.permuted_fragments:
+            out[idx]["pos"] = pms @ out[idx]["pos"]
+            out[idx]["one_hot"] = (pms.float() @ out[idx]["one_hot"].float()).long()
+            out[idx]["charge"] = (pms.float() @ out[idx]["charge"].float()).int()
+
+    def collate_fn(self, batch):
         sizes = []
         bs = len(batch)
         for k in batch[0].keys():
@@ -203,6 +234,7 @@ class ProcessedTS1x():
             else:
                 out[idx][_prop] = torch.cat([x[prop] for x in batch], dim=0)
                 # print(out[idx][_prop].device)
+        self.permute_fragments(out)
         if len(list(res.keys())) == 1:
             return out, res["condition"]
         return out, res

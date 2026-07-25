@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SLURM Directives
+# SLURM Directives (override on the command line as needed)
 #####################################
 #SBATCH -N 1                            # Number of Nodes
 #SBATCH --ntasks-per-node=1             # Number of cores per node.
@@ -8,15 +8,31 @@
 #SBATCH --qos=a40
 #SBATCH --gres=gpu:1
 #SBATCH --mem-per-cpu=60G
-#SBATCH -J OARD_test                    # Job Name. CHANGE as needed.
+#SBATCH -J OAReactDiff                  # Job Name. CHANGE as needed.
 #SBATCH -t 48:00:00                     # Time limit for the job.
+
+# Unified launcher for OA-ReactDiff training and evaluation.
+#
+#   sbatch [SBATCH_OPTIONS] <path>/run.slurm CONDA_ENV PYTHON_SCRIPT [PYTHON_ARGS...]
+#
+# Submit from the directory containing PYTHON_SCRIPT (trainer/ or learnabilty/);
+# the job runs in $SLURM_SUBMIT_DIR.
+#
+# The directives above default to the a40 partition for 48h. sbatch command-line
+# options take precedence over them, so a different GPU is a submit-time choice:
+#   sbatch --partition=l40 --qos=l40              ../run.slurm my_env train.py --dataset rgd1
+#   sbatch --partition=dgx --qos=dgx -t 120:00:00 ../run.slurm my_env train.py --dataset rgd1
+#
+# Set USE_SRUN=0 to call python directly instead of through srun.
+
+USE_SRUN="${USE_SRUN:-1}"
 
 # Usage Information
 #####################################
 usage() {
     echo
     echo "Usage: sbatch $0 CONDA_ENV PYTHON_SCRIPT [PYTHON_ARGS...]"
-    echo "Example: sbatch $0 my_env my_script.py arg1 arg2"
+    echo "Example: sbatch $0 my_env train.py --dataset rgd1"
     echo
     exit 1
 }
@@ -37,13 +53,9 @@ CONDA_ENV="$1"
 PYTHON_SCRIPT="$2"
 shift 2  # Remaining arguments will be passed to the Python script
 
-
-
 # Change to the directory where the job was submitted
 #####################################
 cd "$SLURM_SUBMIT_DIR"
-
-
 
 # Job Information Logging
 #####################################
@@ -51,6 +63,7 @@ echo "========================================="
 echo "Job started at: $(date)"
 echo "Running on node: $(hostname)"
 echo "Job ID: $SLURM_JOB_ID"
+echo "Partition: $SLURM_JOB_PARTITION"
 echo "Number of GPUs allocated: $(nvidia-smi --list-gpus | wc -l)"
 echo "GPUs allocated: $CUDA_VISIBLE_DEVICES"
 echo "GPU Memory Status"
@@ -80,8 +93,11 @@ fi
 echo "Running Python script..."
 LOG_FILE="${PYTHON_SCRIPT%.*}_${SLURM_JOB_ID}_output.log"
 echo "Logging output to: $LOG_FILE"
-# srun python "$PYTHON_SCRIPT" "$@" > "$LOG_FILE" 2>&1
-python "$PYTHON_SCRIPT" "$@" > "$LOG_FILE" 2>&1
+if [ "$USE_SRUN" = "1" ]; then
+    srun python "$PYTHON_SCRIPT" "$@" > "$LOG_FILE" 2>&1
+else
+    python "$PYTHON_SCRIPT" "$@" > "$LOG_FILE" 2>&1
+fi
 
 # Cleanup: Deactivate the Conda Environment
 #####################################

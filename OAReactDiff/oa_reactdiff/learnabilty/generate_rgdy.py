@@ -58,16 +58,13 @@ config = dict(
 print("loading ddpm trainer...", flush=True)
 device = torch.device("cuda")
 # tspath = "/home/ubuntu/efs/2Dto3D_ReactGen/oa_reactdiff/trainer/ckpt/TSDiffusion-TS1x"
-tspath = "/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/trainer/checkpoint" 
+# Directory holding the trained checkpoints: the --checkpoint-root passed to
+# trainer/train.py (default "checkpoint"), e.g. "../trainer/checkpoint".
+tspath = ""
 checkpoints = {
     "leftnet_1301": f"{tspath}/OAReactDiff/leftnet-0-b670188b2cee/ddpm-epoch=1301-val-totloss=542.96.ckpt",
     "leftnet_1999": f"{tspath}/OAReactDiff/leftnet-0-31293be7327e/ddpm-epoch=1999-val-totloss=647.19.ckpt",
     "leftnet_711": f"{tspath}/OAReactDiff/leftnet-0-97458639218ats1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=711-val-totloss=552.38.ckpt",
-    "leftnet_at_final": f"/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/checkpoints/pretrained-ts1x-epoch2000-bz16-AT-checked.ckpt",
-    "leftnet_atag_best": f"{tspath}/OAReactDiff/leftnet-0-e1782ceedd16ts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1697-val-totloss=529.11.ckpt",
-    "leftnet_atag_test_best": f"{tspath}/OAReactDiff/leftnet-0-41d30768408dts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1371-val-totloss=537.06.ckpt",
-    "leftnet_atag_test_last": "/home/rbs-ml/205030033/ankit/OAReactDiff/oa_reactdiff/checkpoints/pretrained-ts1x-epoch2000-bz16-nlayer3-tvt-ATAG.ckpt",
-    "leftnet_atag_test_best2": f"{tspath}/OAReactDiff/leftnet-0-392f3f25df75ts1x_manual_split_test_subset_100_T_5000_num_layers_3_sigma_0_100/ddpm-epoch=1697-val-totloss=528.16.ckpt",
     "leftnet_actual_test_best_rgdy": f"{tspath}/OAReactDiff_rgdy_limit200/leftnet-0-a3ed27a6a73a/ddpm-epoch=1697-val-totloss=780.09.ckpt",
 }
 ddpm_trainer = DDPMModule.load_from_checkpoint(
@@ -82,7 +79,8 @@ ddpm_trainer = set_new_schedule(
 
 print("loading dataset...", flush=True)
 dataset = ProcessedTS1x(
-    pkl_path="/home/rbs-ml/205030033/ankit/ts_project/OAReactDiff/oa_reactdiff/data/rgdy_splits/test_split.pkl",
+    # Test split for this dataset, e.g. "../data/rgdy_splits/test_split.pkl"
+    pkl_path="",
     center=True,
     pad_fragments=0,
     device="cuda",
@@ -101,7 +99,7 @@ loader = DataLoader(
 )
 _id = uuid4()
 localpath = "tmp_rgdy/"
-os.makedirs(localpath)
+os.makedirs(localpath, exist_ok=True)
 for num_repeat in range(config["repeats"]):
     print("num_repeat: ", num_repeat, flush=True)
     for ii, batch in enumerate(loader):
