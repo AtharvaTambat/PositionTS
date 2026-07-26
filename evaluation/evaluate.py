@@ -39,18 +39,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--datatype", required=True, choices=sorted(QM_KWDS))
     parser.add_argument("--pattern", default="{stem}_ts.xyz")
     parser.add_argument("--folds", type=int, default=0)
-    parser.add_argument(
-        "--skip",
-        default="",
-        help="reference indices with no generated counterpart, e.g. 318,397,453; "
-        "later indices shift down accordingly",
-    )
     args = parser.parse_args()
-    args.skip = [int(x) for x in args.skip.split(",") if x.strip()]
     if "{fold}" in args.pattern and args.folds < 1:
         parser.error("--folds is required when the pattern contains {fold}")
-    if "{index}" not in args.pattern and args.skip:
-        parser.error("--skip only applies to patterns containing {index}")
     return args
 
 
@@ -58,11 +49,10 @@ def reference_index(filename: str) -> int:
     return int(filename.split("_")[-1].split(".")[0])
 
 
-def generated_name(pattern: str, filename: str, skip: list, fold: int) -> str:
+def generated_name(pattern: str, filename: str, fold: int) -> str:
     fields = {"stem": filename.split(".")[0], "fold": fold}
     if "{index}" in pattern:
-        index = reference_index(filename)
-        fields["index"] = index - sum(1 for s in skip if s < index)
+        fields["index"] = reference_index(filename)
     return pattern.format(**fields)
 
 
@@ -96,14 +86,12 @@ def main() -> None:
         if not filename.endswith(".xyz"):
             continue
         print(i, filename)
-        if "{index}" in args.pattern and reference_index(filename) in args.skip:
-            continue
         gt_filepath = os.path.join(args.gt_folder, filename)
         n_atoms_gt = atom_count(gt_filepath)
 
         for fold in folds:
             gen_filepath = os.path.join(
-                args.gen_folder, generated_name(args.pattern, filename, args.skip, fold)
+                args.gen_folder, generated_name(args.pattern, filename, fold)
             )
             if args.folds:
                 print(gen_filepath)

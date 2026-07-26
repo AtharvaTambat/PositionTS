@@ -118,7 +118,7 @@ sbatch --mem=60G ../run.slurm learnts inference_modified.py
 ```bash
 python evaluate.py <reference_dir> <generated_dir> --datatype rgd1
 python evaluate.py <reference_dir> <generated_dir> --datatype rgd1 \
-    --pattern 'tsgen_idx_{index}.xyz' --skip 318,397,453
+    --pattern 'tsgen_idx_{index}.xyz'
 python evaluate.py <reference_dir> <generated_dir> --datatype rgd1 \
     --pattern 'fold_{fold}_{stem}.xyz' --folds 5
 ```
