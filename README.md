@@ -30,7 +30,7 @@ Permutation is applied in `collate_fn`, during training as well as evaluation. R
 
 Generation: `baselines/OAReactDiff/oa_reactdiff/learnabilty/generate_<dataset>[_s10|_s50].py`, with `tspath` and `pkl_path` to be set. Writes `tmp_<dataset>*/entry_<i>.xyz`.
 
-`analyze/rmsd.py` clamps RMSD at 1.0 and sets `ignore_chirality=True`. `rmsd_corrected.py` is unused.
+`baselines/OAReactDiff/oa_reactdiff/analyze/rmsd.py` clamps RMSD at 1.0 and sets `ignore_chirality=True`. `rmsd_corrected.py` alongside it is unused.
 
 ## React-OT
 
@@ -96,14 +96,14 @@ cd baselines/learnTS/example
 sbatch --mem=60G ../run.slurm learnts inference_modified.py
 ```
 
-`run_train.sh` carries the reported hyperparameters. Set the checkpoint in `inference_modified.py` and `--directory` in `db_ts1x.py`. Build the pickled databases with `learnts/db_ts1x.py`.
+`run_train.sh` carries the reported hyperparameters. Set the checkpoint in `inference_modified.py` and `--directory` in `baselines/learnTS/learnts/db_ts1x.py`, which also builds the pickled databases.
 
 ## evaluation
 
 | Script | Role |
 |---|---|
 | `evaluate.py`, `evaluate2.py`, `evaluate3.py`, `evaluate_multiple.py` | RMSD and energy error over generated structures |
-| `evaluate_shuffle_ts.py` | atom-order comparison; writes `ts_shuffling/<dataset>.json` |
+| `evaluate_shuffle_ts.py` | atom-order comparison; writes `<dataset>.json` (the checked-in copies are in `ts_shuffling/`) |
 | `get_median.py`, `metrics.py` | medians from one log; two-log minimum with mean, std and RMSE |
 | `rmsd.py` | `rmsd_core`, `dmae_core` |
 | `generate_ts.py`, `D2C.py` | coordinates from a predicted distance matrix |

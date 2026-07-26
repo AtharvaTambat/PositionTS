@@ -8,8 +8,8 @@ import json
 gen_folder = sys.argv[1]
 datatype = sys.argv[2]
 
-gt_folder = f"../ts_gen/data/{datatype}/xyz_files/test_split/transition_states"
-gt_shuf_folder = f"../ts_gen/data/{datatype}/xyz_files/test_split/transition_states_shuffd"
+gt_folder = f"../baselines/ts_gen/data/{datatype}/xyz_files/test_split/transition_states"
+gt_shuf_folder = f"../baselines/ts_gen/data/{datatype}/xyz_files/test_split/transition_states_shuffd"
 qm_kwds = {"transition1x": ["wb97x", "631g*", False],
            "isomer": ["wb97x", "def2-TZVP", True],
            "rgd1": ["b3lyp", "def2-TZVP", True],
