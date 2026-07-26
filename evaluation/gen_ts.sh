@@ -1,6 +1,6 @@
 # Set these to your local paths before running.
-DATA_ROOT="${DATA_ROOT:-../ts_gen/data}"            # per-dataset xyz_files/test_split trees
-INFERENCE_ROOT="${INFERENCE_ROOT:-../learnTS}"      # inference .pkl files and generated output
+DATA_ROOT="${DATA_ROOT:-../baselines/ts_gen/data}"            # per-dataset xyz_files/test_split trees
+INFERENCE_ROOT="${INFERENCE_ROOT:-../baselines/learnTS}"      # inference .pkl files and generated output
 
 # sbatch run.slurm oa2 generate_ts.py $DATA_ROOT/transition1x/xyz_files/test_split/reactants $DATA_ROOT/transition1x/xyz_files/test_split/products $INFERENCE_ROOT/learnability/s10/train_ts1x10_ep823_test_ts1x100.pkl $INFERENCE_ROOT/generated_ts/transition1x_s10
 

@@ -277,7 +277,7 @@ if __name__=="__main__":
     import pickle
     import argparse
     parser = argparse.ArgumentParser()
-    # split directory, e.g. "../data/rgdy_subset_10_splits/"
+    # split directory, e.g. "../../data/rgdy_subset_10_splits/"
     parser.add_argument("--directory", type=str, default="")
 
     args = parser.parse_args()

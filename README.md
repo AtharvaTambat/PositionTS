@@ -1,6 +1,6 @@
 # PositionTS
 
-Code for the transition-state prediction experiments. Six vendored baselines, each retaining its upstream licence and requiring its own environment, plus a shared `evaluation/` directory.
+Code for the transition-state prediction experiments. The six baselines live in `baselines/`, each retaining its upstream licence and requiring its own environment. Shared evaluation code is in `evaluation/`.
 
 ## Job submission
 
@@ -13,7 +13,7 @@ Submit from the directory containing the script. Partition and QoS are unset; su
 ## OA-ReactDiff
 
 ```bash
-cd OAReactDiff/oa_reactdiff/trainer
+cd baselines/OAReactDiff/oa_reactdiff/trainer
 python train.py --dataset rgd1 --fraction 10
 ```
 
@@ -28,14 +28,14 @@ Splits: `<data-root>/<stem>_splits/` and `<stem>_subset_<fraction>_splits/`, eac
 
 Permutation is applied in `collate_fn`, during training as well as evaluation. Reported settings: `--permute product --no-shuffle`, `--permute ts --no-shuffle`, `--permute product+ts`.
 
-Generation: `oa_reactdiff/learnabilty/generate_<dataset>[_s10|_s50].py`, with `tspath` and `pkl_path` to be set. Writes `tmp_<dataset>*/entry_<i>.xyz`.
+Generation: `baselines/OAReactDiff/oa_reactdiff/learnabilty/generate_<dataset>[_s10|_s50].py`, with `tspath` and `pkl_path` to be set. Writes `tmp_<dataset>*/entry_<i>.xyz`.
 
 `analyze/rmsd.py` clamps RMSD at 1.0 and sets `ignore_chirality=True`. `rmsd_corrected.py` is unused.
 
 ## React-OT
 
 ```bash
-cd react-ot/reactot/trainer
+cd baselines/react-ot/reactot/trainer
 python train.py --dataset rgd1 --fraction 10 --data-root <path>
 ```
 
@@ -43,17 +43,17 @@ python train.py --dataset rgd1 --fraction 10 --data-root <path>
 
 | Generation directory | Experiment |
 |---|---|
-| `reactot/evaluate/` | main results |
-| `reactot/learnability/` | reduced supervision |
-| `reactot/permutation/` | atom-order robustness |
-| `reactot/generalize/trained_<rgd1\|rgdx\|rgdy>/` | cross-regime transfer |
+| `baselines/react-ot/reactot/evaluate/` | main results |
+| `baselines/react-ot/reactot/learnability/` | reduced supervision |
+| `baselines/react-ot/reactot/permutation/` | atom-order robustness |
+| `baselines/react-ot/reactot/generalize/trained_<rgd1\|rgdx\|rgdy>/` | cross-regime transfer |
 
 Each requires `tspath` and `pkl_path`. `Trainer(replace_sampler_ddp=False)` requires Lightning < 2.0.
 
 ## TS-GAN
 
 ```bash
-cd TS-GAN
+cd baselines/TS-GAN
 sbatch ./run.slurm tsgan train.py --data_path ./data/rgd1_numpy/train/train.npy \
     --trained_model_path ./trained_models/rgd1
 ```
@@ -65,7 +65,7 @@ sbatch ./run.slurm tsgan train.py --data_path ./data/rgd1_numpy/train/train.npy 
 ## ts_gen
 
 ```bash
-cd ts_gen
+cd baselines/ts_gen
 sbatch ./run.slurm tsgen train.py --r_file <reactants.sdf> --p_file <products.sdf> \
     --ts_file <ts.sdf> --hidden_size 256
 sbatch ./run.slurm tsgen predict_new.py --reactants … --products … --checkpoint … --output_dir …
@@ -78,7 +78,7 @@ Commands are recorded in `run.sh` and `run_generate_ts.sh`. `predict_new.py` sup
 PaiNN potential inside a nudged-elastic-band search.
 
 ```bash
-cd neuralneb
+cd baselines/neuralneb
 python scripts/download_qm9x.py data
 sbatch ./run.slurm oa2 scripts/train.py
 ./run_all.sh rgd1
@@ -90,8 +90,8 @@ sbatch ./run.slurm oa2 scripts/train.py
 ## LearnTS
 
 ```bash
-git submodule update --init learnTS/ard_gsm
-cd learnTS/example
+git submodule update --init baselines/learnTS/ard_gsm
+cd baselines/learnTS/example
 ./run_train.sh
 sbatch --mem=60G ../run.slurm learnts inference_modified.py
 ```

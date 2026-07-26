@@ -1,6 +1,6 @@
 # Set these to your local paths before running.
-DATA_ROOT="${DATA_ROOT:-../data}"                 # dataset splits (shared with the OA-ReactDiff experiments)
-PERMUTED_ROOT="${PERMUTED_ROOT:-../data/permuted}"  # atom-order-permuted copies of the splits
+DATA_ROOT="${DATA_ROOT:-../../data}"                 # dataset splits (shared with the OA-ReactDiff experiments)
+PERMUTED_ROOT="${PERMUTED_ROOT:-../../data/permuted}"  # atom-order-permuted copies of the splits
 MODEL_ROOT="${MODEL_ROOT:-./trained_models}"      # trained checkpoints
 OUTPUT_ROOT="${OUTPUT_ROOT:-./generated}"         # generated transition states
 

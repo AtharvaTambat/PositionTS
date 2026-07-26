@@ -8,7 +8,7 @@
 #
 # Environment:
 #   DATA_ROOT      root holding <dataset>/xyz_files/test_split/     (default ../ts_gen/data)
-#   PERMUTED_ROOT  root holding <dataset>_splits/xyz_data/          (default ../permuted_data)
+#   PERMUTED_ROOT  root holding <dataset>_splits/xyz_data/          (default ../../permuted_data)
 #   OUTPUT_ROOT    where generated transition states are written    (default ./generated_transition_states)
 #   CONDA_ENV      conda environment passed to run.slurm            (default oa2)
 #   PARTITION      queue to submit to and to count when throttling  (default: cluster default queue)
@@ -28,7 +28,7 @@ case "$PERMUTED" in
 esac
 
 DATA_ROOT="${DATA_ROOT:-../ts_gen/data}"
-PERMUTED_ROOT="${PERMUTED_ROOT:-../permuted_data}"
+PERMUTED_ROOT="${PERMUTED_ROOT:-../../permuted_data}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-./generated_transition_states}"
 CONDA_ENV="${CONDA_ENV:-oa2}"
 USER="${USER:-$(id -un)}"
