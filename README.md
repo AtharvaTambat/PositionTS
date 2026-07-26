@@ -102,7 +102,7 @@ sbatch --mem=60G ../run.slurm learnts inference_modified.py
 
 | Script | Role |
 |---|---|
-| `evaluate.py`, `evaluate2.py`, `evaluate3.py`, `evaluate_multiple.py` | RMSD and energy error over generated structures |
+| `evaluate.py` | RMSD, D-MAE and energy error over generated structures |
 | `evaluate_shuffle_ts.py` | atom-order comparison; writes `<dataset>.json` (the checked-in copies are in `ts_shuffling/`) |
 | `get_median.py`, `metrics.py` | medians from one log; two-log minimum with mean, std and RMSE |
 | `rmsd.py` | `rmsd_core`, `dmae_core` |
@@ -113,4 +113,14 @@ sbatch --mem=60G ../run.slurm learnts inference_modified.py
 | `mw.py`, `n_heavy_atoms.py`, `xyz2mol.py` | molecular weight and heavy-atom counts |
 | `gen_ts.sh` | recorded generation commands |
 
-Arguments are positional. The four `evaluate*.py` variants assume different generated-file naming and infer the DFT level of theory differently from the output-folder name.
+`evaluate.py` takes the reference and generated folders positionally, the level of theory via `--datatype`, and the generated-file naming via `--pattern`:
+
+```bash
+python evaluate.py <reference_dir> <generated_dir> --datatype rgd1
+python evaluate.py <reference_dir> <generated_dir> --datatype rgd1 \
+    --pattern 'tsgen_idx_{index}.xyz' --skip 318,397,453
+python evaluate.py <reference_dir> <generated_dir> --datatype rgd1 \
+    --pattern 'fold_{fold}_{stem}.xyz' --folds 5
+```
+
+The other scripts take positional arguments.
