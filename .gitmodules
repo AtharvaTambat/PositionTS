@@ -1,3 +1,0 @@
-[submodule "baselines/learnTS/ard_gsm"]
-	path = baselines/learnTS/ard_gsm
-	url = https://github.com/cgrambow/ard_gsm.git

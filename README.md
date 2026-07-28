@@ -90,11 +90,12 @@ sbatch ./run.slurm oa2 scripts/train.py
 ## LearnTS
 
 ```bash
-git submodule update --init baselines/learnTS/ard_gsm
 cd baselines/learnTS/example
 ./run_train.sh
 sbatch --mem=60G ../run.slurm learnts inference_modified.py
 ```
+
+`ard_gsm/` is vendored from `github.com/cgrambow/ard_gsm` at `8282601`, under its own licence.
 
 `run_train.sh` carries the reported hyperparameters. Set the checkpoint in `inference_modified.py` and `--directory` in `baselines/learnTS/learnts/db_ts1x.py`, which also builds the pickled databases.
 
