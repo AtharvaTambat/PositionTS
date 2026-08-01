@@ -1,3 +1,8 @@
+"""Main-results generation of transition states for the isomer test split, using the isomer-trained checkpoint.
+
+One of 32 near-identical generation scripts; tspath (checkpoint root) and pkl_path (test split) are left blank to be filled in.
+"""
+
 from typing import List
 import time
 import os
@@ -31,6 +36,7 @@ AU2KCALMOL = 627.5
 def write_temp_xyz(
             fragments_nodes, out_samples, idx, prefix="gen", localpath="tmp", ex_ind=0
 ):
+    """Write <localpath>/<prefix>_<ex_ind+j>.xyz per molecule; ex_ind carries the cross-batch offset."""
     for ii in idx:
         start_ind, end_ind = 0, 0
         for jj, natoms in enumerate(fragments_nodes[0]):
@@ -46,6 +52,7 @@ def write_temp_xyz(
             start_ind = end_ind
 
 class OPT:
+    """Solver settings consumed by the Schrodinger-bridge sampler."""
     def __init__(
         self,
         solver,

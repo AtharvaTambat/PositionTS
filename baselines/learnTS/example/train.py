@@ -1,3 +1,4 @@
+"""Train the LearnTS distance-matrix model on the pickled databases built by db_ts1x.py."""
 import os
 import torch
 from   torch import nn

@@ -1,3 +1,8 @@
+"""Batch sampling and energy helpers for the react-ot models.
+
+Dead copy of baselines/react-ot/reactot/evaluate/utils.py: nothing here imports it, and
+its `reactot.*` imports do not resolve from this directory.
+"""
 from typing import List
 import torch
 import time
@@ -18,6 +23,7 @@ def set_new_schedule(
     device: torch.device = torch.device("cuda"),
     noise_schedule: str = "polynomial_2"
 ) -> DDPMModule:
+    """Swap in a fresh noise schedule with the given number of timesteps and move the module to device."""
     precision: float = 1e-5
 
     gamma_module = PredefinedNoiseSchedule(
@@ -41,6 +47,10 @@ def inplaint_batch(
     jump_length: int = 1,
     frag_fixed: List = [0, 2],
 ):
+    """Inpaint one batch with the fragments in frag_fixed held at their input geometry.
+
+    Returns the sampled features, the fixed input features and the per-fragment atom counts.
+    """
     representations, conditions = batch
     xh_fixed = [
         torch.cat(
@@ -74,6 +84,11 @@ def sample_reactot_batch(
     jump_length: int = 1,
     frag_fixed: List = [0, 2],
 ):
+    """Sample one batch with the Schrodinger-bridge model, returning predicted and target features.
+
+    resamplings, jump_length and frag_fixed are accepted for signature compatibility with
+    inplaint_batch and are not used.
+    """
     representations, conditions = batch
     xh_fixed = [
         torch.cat(
@@ -101,6 +116,7 @@ def sample_reactot_batch(
     return pred_xh, target_xh, fragments_nodes
 
 def batch_ts_deltaE(bz, xc="wb97x", basis="631g*", d3=False, localpath="tmp"):
+    """E(gen_<i>_ts) - E(sample_<i>_ts) in kcal/mol, for each of the bz pairs under localpath."""
     deltaEs = []
     for ii in range(bz):
         s_time = time.time()
@@ -119,6 +135,7 @@ def batch_ts_deltaE(bz, xc="wb97x", basis="631g*", d3=False, localpath="tmp"):
 
 
 def batch_E(bz, prefix="gen"):
+    """Total energies in kcal/mol of tmp/<prefix>_<i>_ts.xyz for i below bz."""
     Es = []
     for ii in range(bz):
         mf, _, _ = compute_efh(
@@ -129,6 +146,7 @@ def batch_E(bz, prefix="gen"):
 
 
 def samples_to_pos_charge(out_samples, fragments_nodes):
+    """Split a stacked batch into per-molecule coordinates keyed by fragment, atomic numbers and atom counts."""
     x_r = torch.tensor_split(
         out_samples[0],
         torch.cumsum(fragments_nodes[0], dim=0).to("cpu")[:-1]

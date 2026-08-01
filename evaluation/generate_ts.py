@@ -1,3 +1,8 @@
+"""Rebuild transition-state coordinates from predicted distance matrices in a pickle.
+
+Writes one <name>_ts.xyz per reactant file, using the reactant geometry as the
+starting point for the distance-to-coordinate reconstruction.
+"""
 import numpy as np
 import sys
 import os
@@ -14,6 +19,7 @@ out_folder = sys.argv[-1]
 os.makedirs(out_folder, exist_ok=True)
 
 def get_D(X, atoms):
+    """Coulomb matrix Z_i Z_j / X_ij with a zero diagonal, symmetrised. Not used by this script."""
     arr = []
     a_d = atom_data.symbol_dict(sys.argv[0])
     for i in range (len(atoms)):
@@ -37,6 +43,11 @@ def get_D(X, atoms):
     return np.array(arr)
 
 def get_atoms(a, b):
+    """Elements and coordinates from xyz file a.
+
+    File b is read and parsed as well, but only a is returned; the averaging of the
+    two geometries is commented out below.
+    """
     g = open(a)
     lines = g.readlines()[2:]
     g.close()

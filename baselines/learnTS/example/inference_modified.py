@@ -1,3 +1,8 @@
+"""Run LearnTS inference over ../learnts/test-db-distance_rgdy.pkl with a trained checkpoint.
+
+The checkpoint path `filename` is committed empty and has to be filled in before this runs.
+"""
+
 import os
 import torch
 from   torch import nn

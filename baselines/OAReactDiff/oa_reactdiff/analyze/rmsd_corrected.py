@@ -1,3 +1,8 @@
+"""Corrected variant of analyze/rmsd.py; unused, nothing imports this module.
+
+Differs mainly by returning the order-matched molecule alongside the RMSD, dropping the
+1.0 clamp, taking a true minimum over GeneticOrderMatcher pairs, and scaling by sqrt(3).
+"""
 from typing import List
 import numpy as np
 
@@ -28,6 +33,7 @@ def xyz2pmg(xyzfile):
 
 
 def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
+    """Order-match mol2 onto mol1; returns (matched Molecule, RMSD). Matcher picked by permutation count."""
     _, count = np.unique(mol1.atomic_numbers, return_counts=True)
     if same_order:
         bfm = KabschMatcher(mol1)
@@ -66,6 +72,10 @@ def pymatgen_rmsd(
     threshold=0.5,
     same_order=False,
 ):
+    """Order-match mol2 onto mol1; returns (matched Molecule, RMSD*sqrt(3)).
+
+    Either molecule may be an .xyz path; same_order is accepted but never forwarded to rmsd_core.
+    """
     if isinstance(mol1, str):
         mol1 = xyz2pmg(mol1)
     if isinstance(mol2, str):
@@ -90,6 +100,9 @@ def batch_rmsd(
     idx: int = 1,
     threshold=0.5,
 ):
+    """Per-molecule RMSD for fragment idx of a batch, in the order the molecules appear.
+    A matcher failure is recorded as 5.0 rather than propagating.
+    """
     rmsds = []
     out_samples_use = out_samples[idx]
     xh_use = xh[idx]

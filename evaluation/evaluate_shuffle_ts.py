@@ -1,3 +1,8 @@
+"""Compare generated transition states against the reference and its atom-order-permuted copy.
+
+Writes the per-reaction atom count and the (original, shuffled) RMSD and D-MAE pairs
+to <datatype>.json.
+"""
 from rmsd import rmsd_n_dmae
 import time
 import os

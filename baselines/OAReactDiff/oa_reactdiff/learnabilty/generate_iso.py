@@ -1,3 +1,6 @@
+"""Sample transition states for the isomer test split with the fully supervised checkpoint.
+Writes geometries only, to tmp_isomer/entry_<i>.xyz.
+"""
 from typing import List
 import time
 import os
@@ -29,6 +32,7 @@ AU2KCALMOL = 627.5
 def write_temp_xyz(
             fragments_nodes, out_samples, idx, prefix="gen", localpath="tmp", ex_ind=0
 ):
+    """Write <localpath>/<prefix>_<ex_ind+j>.xyz per molecule; ex_ind carries the cross-batch offset."""
     for ii in idx:
         start_ind, end_ind = 0, 0
         for jj, natoms in enumerate(fragments_nodes[0]):

@@ -1,3 +1,4 @@
+"""Maximum and average molecular weight of the reactants across a dataset's three splits."""
 import rdkit
 from rdkit import Chem
 from rdkit.Chem import Descriptors
@@ -17,6 +18,7 @@ def calculate_molecular_weight(mol):
         return None
 
 def prepare_mol(xyz, chg=0):
+    """RDKit molecule from an xyz block; a bond-order failure is printed and swallowed."""
     mol = Chem.MolFromXYZBlock(xyz)
     rdDetermineBonds.DetermineConnectivity(mol)
     try:

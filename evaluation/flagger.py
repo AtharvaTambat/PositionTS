@@ -1,3 +1,4 @@
+"""Screen a directory of .xyz geometries for valence errors and bond angles far from their VSEPR ideal."""
 import os
 import glob
 import sys

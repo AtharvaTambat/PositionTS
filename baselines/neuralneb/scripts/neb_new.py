@@ -1,3 +1,9 @@
+"""Nudged-elastic-band transition-state search over a directory of reactions with a trained PaiNN potential.
+
+Batch variant: --reactant_dir/--product_dir are walked for matching entry_*.xyz files and
+progress is appended to a logfile. neb_new_2.py is the single-reaction variant.
+"""
+
 from argparse import ArgumentParser
 import os
 import sys
@@ -28,6 +34,10 @@ def log(msg, logfile):
 # PROCESS ONE REACTION
 # -------------------------------
 def process_reaction(fname, args, model):
+    """Run a climbing-image NEB for one reaction and write its highest-energy image to the output directory.
+
+    Returns (wall-clock seconds, largest force component over all images, TS energy).
+    """
     start_time = time.time()
 
     reactant_path = os.path.join(args.reactant_dir, fname)
@@ -76,7 +86,7 @@ def main(args):
     os.makedirs(args.output_dir, exist_ok=True)
     logfile = os.path.join(args.output_dir, "progress.log")
 
-    log("🚀 Script started", logfile)
+    log("Script started", logfile)
 
     # load model ONCE
     statedict = torch.load(args.model, map_location=DEVICE)
@@ -94,7 +104,7 @@ def main(args):
     log(f"Found {total} reactions", logfile)
 
     if total == 0:
-        log("❌ No files found. Exiting.", logfile)
+        log("No files found. Exiting.", logfile)
         return
 
     times = []
@@ -124,7 +134,7 @@ def main(args):
             log(f"[{i+1}/{total}] {fname} FAILED: {e}", logfile)
 
     total_time = time.time() - start_global
-    log(f"\n✅ ALL DONE in {total_time/60:.2f} minutes", logfile)
+    log(f"\nALL DONE in {total_time/60:.2f} minutes", logfile)
 
 
 # -------------------------------

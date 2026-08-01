@@ -1,3 +1,4 @@
+"""Upstream OA-ReactDiff Transition1x trainer, with the hyperparameters used for the reported runs."""
 from typing import List, Optional, Tuple
 from uuid import uuid4
 import os

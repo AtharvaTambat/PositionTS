@@ -19,6 +19,13 @@ AU2EV = 27.2114
 BOHR = 0.52917721092
 
 
+# ============================================================================
+# FLAW (this work, paper Sec. 2 and Sec. 3.2)
+# Saddle-point index test. A valid transition state has exactly one
+# imaginary frequency. Applying this with IRC endpoint matching shows only
+# 29% of sampled Transition1x and 50% of Isomerization entries are valid
+# (Table 2) -- the datasets themselves do not enforce this at construction.
+# ============================================================================
 def count_negative_eig(x: list):
     count = 0
     for _x in x:

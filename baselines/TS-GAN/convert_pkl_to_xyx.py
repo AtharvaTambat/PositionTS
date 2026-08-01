@@ -1,3 +1,9 @@
+"""Convert a dataset split pickle into the flat .xyz layout TS-GAN reads.
+
+All reactions land in one output directory: the TS as mol_<i>.xyz, the reactant as
+mol_<i>_rev.xyz and the product as mol_<i>_for.xyz, all using the reactant atom order.
+"""
+
 import pickle
 import os
 import argparse
@@ -25,6 +31,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # -------- WRITE XYZ --------
 def write_xyz(filename, atomic_numbers, coords):
+    """Write one .xyz frame, mapping atomic numbers to symbols via ATOM_MAP (H, C, N, O, F only)."""
     with open(filename, "w") as f:
         n = len(atomic_numbers)
         f.write(f"{n}\n")
@@ -61,4 +68,4 @@ for i, sample in enumerate(data):
     write_xyz(os.path.join(output_dir, f"{base}_for.xyz"), atoms, prod)
 
 
-print(f"✅ Converted {len(data)} samples to {output_dir}/")
+print(f"Converted {len(data)} samples to {output_dir}/")

@@ -1,3 +1,7 @@
+"""List the .xyz files in a folder that RDKit cannot turn into a molecule.
+
+Prints the failures and a cp command per failure for copying them into a second folder.
+"""
 import os
 import sys
 
@@ -6,6 +10,7 @@ from rdkit.Chem import rdDetermineBonds
 
 
 def prepare_mol(xyz, chg=0):
+    """Build an RDKit molecule from an xyz block; raises if bond orders cannot be assigned."""
     mol = Chem.MolFromXYZBlock(xyz)
     rdDetermineBonds.DetermineConnectivity(mol)
     rdDetermineBonds.DetermineBondOrders(mol, charge=chg)

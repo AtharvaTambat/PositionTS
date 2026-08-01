@@ -1,3 +1,9 @@
+"""Convert a dataset split pickle into reactant/, product/ and ts/ .xyz files named entry_<i>.xyz.
+
+convert_pkl_to_xyx.py instead writes a flat mol_<i>*.xyz layout; here each endpoint also keeps
+its own atom ordering (charge_0/1/2) rather than reusing the reactant's.
+"""
+
 import pickle
 import os
 import argparse
@@ -27,6 +33,7 @@ os.makedirs(os.path.join(output_dir, "ts"), exist_ok=True)
 
 # -------- WRITE XYZ --------
 def write_xyz(filename, atomic_numbers, coords):
+    """Write one .xyz frame, mapping atomic numbers to symbols via ATOM_MAP (H, C, N, O, F only)."""
     with open(filename, "w") as f:
         n = len(atomic_numbers)
         f.write(f"{n}\n")
@@ -65,4 +72,4 @@ for i, sample in enumerate(data):
     write_xyz(os.path.join(output_dir, "product", f"{base}.xyz"), atoms_p, prod)
 
 
-print(f"✅ Converted {len(data)} samples to {output_dir}/")
+print(f"Converted {len(data)} samples to {output_dir}/")

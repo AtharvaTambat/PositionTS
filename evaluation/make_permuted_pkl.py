@@ -1,3 +1,8 @@
+"""Write a copy of a dataset pickle with the product fragment (index 2) permuted.
+
+Its positions, one-hot types and charges share one permutation matrix, so the sample
+still describes the same molecule in a different atom order.
+"""
 import pickle
 import copy
 import numpy as np

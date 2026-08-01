@@ -1,3 +1,9 @@
+"""Build the pickled distance-matrix databases the LearnTS training and inference scripts load.
+
+Run as a script with --directory pointing at a Transition1x-style split directory holding
+train_split.pkl, validation_split.pkl and test_split.pkl.
+"""
+
 import os
 import re
 import torch
@@ -16,12 +22,17 @@ num_images = 1
 
 
 def get_weight(symbols):
+    """Mass-weighting matrix sqrt(m_i * m_j) over the 3N Cartesian degrees of freedom."""
     masses = list(map(lambda s: atomic_masses[atomic_numbers[s]], symbols))
     # print(masses)
     m = np.ravel(np.outer(masses,[1.0]*3))
     return np.sqrt(np.outer(m,m))
 
 def calculate_images(inp):
+    """Linearly interpolate a reaction path, through the TS given (r, p, ts) or straight from r to p given (r, p).
+
+    Either way the product is appended as the final image, giving 2*num_images+1 images.
+    """
     out = []
     if(len(inp)==3):
         positions_r, positions_p, positions_ts = inp
@@ -43,6 +54,7 @@ def calculate_images(inp):
     return out
 
 def calculate_edm(positions):
+    """Squared interatomic distance matrix per image; the square root is taken later in my_collate_fn."""
     out = []
     for position in positions:
         N = len(position)
@@ -54,6 +66,10 @@ def calculate_edm(positions):
     return np.array(out)
 
 class DB(Dataset):
+    """Reaction-path dataset built from one split pickle of reactant/TS/product geometries.
+
+    Entropies, B matrices and Hessians are zeros; distance matrices, energies and mass weights are real.
+    """
     def __init__(self, directory): #, db_normalizer, use_fit ):
         from functools import reduce
         import re
@@ -130,6 +146,7 @@ class DB(Dataset):
         return self.length
 
     def __getitem__(self, idx):
+        """Ten arrays for my_collate_fn; the trailing comment omits the leading atomic numbers."""
         num_atoms = len(self.list_symbols[idx])
 
         B_zeros = np.zeros((3, 3*num_atoms, 3*num_atoms-6), dtype=np.float32)
@@ -161,6 +178,10 @@ class DB(Dataset):
 #               self.db_normalizer[2].transform(self.list_edm_ts[idx].reshape(-1,1)).reshape(self.list_edm_ts[idx].shape)
 
 def my_collate_fn(batch, num_images, grid, alpha, duplicate=False):
+    """Pad DB items into batch tensors, keeping only the upper triangle of each distance matrix.
+
+    Distances are square-rooted here; the linear path is expanded onto `grid` as exp(-alpha*d**2), and duplicate=True re-adds each reaction with its path reversed and its endpoint energies swapped.
+    """
 
 
     factor = 2 if (duplicate) else 1

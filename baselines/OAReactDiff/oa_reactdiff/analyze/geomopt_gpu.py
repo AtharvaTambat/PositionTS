@@ -1,3 +1,7 @@
+"""GPU (GPU4PySCF) variant of geomopt.py: single-point energies, forces and Hessians.
+geomopt.py's optimize-based compute_rmsd_with_optgeom is commented out here, along with
+its optimize and pymatgen_rmsd imports.
+"""
 import numpy as np
 
 from pyscf import gto, dft
@@ -19,6 +23,7 @@ BOHR = 0.52917721092
 
 
 def count_negative_eig(x: list):
+    """Count imaginary frequencies, i.e. entries of x with a positive imaginary part."""
     count = 0
     for _x in x:
         if _x.imag > 0:
@@ -31,6 +36,10 @@ def _to_numpy(x):
     return x.get() if hasattr(x, "get") else x
 
 def compute_efh_gpu(geomfile,f=True,hess=False,return_metrics=False,xc="wb97x",basis="631g*",d3=False,use_gpu=True,auxbasis=None):
+    """Run a closed-shell DFT single point on GPU and return (mf, force, hessian).
+    With return_metrics, also returns the force RMS in eV/A and the imaginary-mode count
+    (both nan/None if the SCF did not converge or hess was not requested).
+    """
     spin = 0
 
     mol = gto.M(
@@ -88,6 +97,7 @@ def compute_efh_gpu(geomfile,f=True,hess=False,return_metrics=False,xc="wb97x",b
     return mf, force, hessian
 
 def compute_efh(geomfile, f=True, hess=False, return_metrics=False, xc="wb97x", basis="631g*", d3=False):
+    """CPU counterpart of compute_efh_gpu; return_metrics requires hess=True."""
     spin = 0
     mol = gto.M(
         atom=geomfile,
@@ -174,6 +184,7 @@ def compute_efh(geomfile, f=True, hess=False, return_metrics=False, xc="wb97x", 
 
 
 def compute_barrier(opt1_xyz, ts_xyz, opt2_xyz):
+    """Forward and reverse barrier heights in eV, from CPU single points on the three geometries."""
     mf_1, _, _ = compute_efh(opt1_xyz, f=True, hess=False, return_metrics=False)
     mf_2, _, _ = compute_efh(opt2_xyz, f=True, hess=False, return_metrics=False)
     mf_ts, _, _ = compute_efh(ts_xyz, f=True, hess=False, return_metrics=False)
@@ -183,6 +194,7 @@ def compute_barrier(opt1_xyz, ts_xyz, opt2_xyz):
 
 
 def calc_deltaE(xyzfile1, xyzfile2, f=False, xc="wb97x", basis="631g*", d3=False):
+    """Energy of xyzfile2 minus xyzfile1 in eV, from GPU single points."""
     mf_1, _, _ = compute_efh_gpu(xyzfile1, f=f, hess=False, return_metrics=False, xc=xc, basis=basis, d3=d3)
     mf_2, _, _ = compute_efh_gpu(xyzfile2, f=f, hess=False, return_metrics=False, xc=xc, basis=basis, d3=d3)
     return (mf_2.e_tot - mf_1.e_tot) * AU2EV

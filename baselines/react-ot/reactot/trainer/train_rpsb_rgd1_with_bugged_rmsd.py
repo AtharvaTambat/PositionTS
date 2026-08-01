@@ -1,3 +1,8 @@
+"""Hardcoded RGD1 predecessor of train.py, kept to label the "rgd1_bugged_rmsd" wandb project.
+
+The RMSD bug in the name lives in analyze/rmsd.py, which pl_trainer.py imports for train.py
+too, so it affects both; analyze/rmsd_corrected.py is the unused fix.
+"""
 from typing import List, Optional, Tuple
 from uuid import uuid4
 import os
@@ -20,6 +25,8 @@ import colored_traceback.always
 os.environ["WANDB_MODE"] = "offline"
 
 class OPT:
+    """Solver settings consumed by the Schrodinger-bridge sampler."""
+
     def __init__(
         self,
         solver,

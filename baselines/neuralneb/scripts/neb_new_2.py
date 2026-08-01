@@ -1,3 +1,9 @@
+"""Single-reaction NEB search with a trained PaiNN potential; run_all.sh submits one job per reaction.
+
+Product and reactant .xyz paths are positional, product first. Unlike neb_new.py there is no
+climbing image, and the saved TS is the image of minimum fmax rather than of maximum energy.
+"""
+
 from argparse import ArgumentParser
 import sys
 import os
@@ -8,7 +14,7 @@ import torch
 import numpy as np
 
 from ase.io import read, write
-from ase.mep import NEB, NEBTools   # ✅ updated import
+from ase.mep import NEB, NEBTools   # updated import
 from ase.optimize import BFGS
 from neuralneb import painn, utils
 
@@ -38,7 +44,7 @@ def main(args):
     # -------------------------------
     atom_configs = [reactant.copy() for _ in range(10)] + [product]
 
-    # ✅ IMPORTANT: separate calculator per image (NEB requirement)
+    # IMPORTANT: separate calculator per image (NEB requirement)
     for atom_config in atom_configs:
         atom_config.calc = utils.MLCalculator(model)
 
@@ -55,7 +61,7 @@ def main(args):
     optimizer.run(fmax=0.05, steps=20)
 
     # -------------------------------
-    # 🔥 SAVE "TS" (your definition: min fmax)
+    # Save the predicted TS: the image of minimum fmax, not of maximum energy
     # -------------------------------
     forces = [img.get_forces() for img in atom_configs]
     fmax_list = [np.max(np.abs(f)) for f in forces]
@@ -87,6 +93,7 @@ def main(args):
 
 
 def mep_fig(path, energy):
+    """Minimum-energy-path figure, titled with max(energy) in eV. Not used by this script."""
     fig, ax = plt.subplots()
     ax.plot(path, energy, label="MEP")
     ax.grid()
@@ -105,7 +112,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--model", nargs="?", default="data/painn.sd")
 
-    # ✅ NEW ARG (only addition)
+    # New argument (only addition)
     parser.add_argument("--output_dir", required=True)
 
     args = parser.parse_args()

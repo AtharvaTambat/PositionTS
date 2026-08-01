@@ -1,3 +1,8 @@
+"""Summary metrics from a pair of evaluate.py logs, one per reaction side.
+
+Reports mean, std, RMSE and medians for the reactant side, the product side, and the
+element-wise minimum of the two.
+"""
 import numpy as np
 import sys
 import re
@@ -7,6 +12,10 @@ logfile1 = sys.argv[1]
 logfile2 = sys.argv[2]
 
 def extract_all(file_path):
+    """Recover the delta E, RMSD and D-MAE lists and the run path printed in a log.
+
+    Any list the regex does not find comes back as None rather than raising.
+    """
     with open(file_path, "r") as f:
         text = f.read()
 

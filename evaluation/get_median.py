@@ -1,3 +1,4 @@
+"""Median RMSD, D-MAE and energy error, read back out of a single evaluate.py log."""
 import numpy as np
 import sys
 import re
@@ -6,6 +7,10 @@ import ast
 logfile = sys.argv[1]
 
 def extract_all(file_path):
+    """Recover the delta E, RMSD and D-MAE lists and the run path printed in a log.
+
+    Any list the regex does not find comes back as None rather than raising.
+    """
     with open(file_path, "r") as f:
         text = f.read()
 

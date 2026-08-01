@@ -25,6 +25,7 @@ QM_KWDS = {
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse the command line, rejecting a {fold} pattern that is not accompanied by --folds."""
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -46,10 +47,12 @@ def parse_args() -> argparse.Namespace:
 
 
 def reference_index(filename: str) -> int:
+    """Trailing underscore-separated field of a reference filename, as an integer."""
     return int(filename.split("_")[-1].split(".")[0])
 
 
 def generated_name(pattern: str, filename: str, fold: int) -> str:
+    """Name of the generated file for a reference file, filling {stem}, {index} and {fold}."""
     fields = {"stem": filename.split(".")[0], "fold": fold}
     if "{index}" in pattern:
         fields["index"] = reference_index(filename)
@@ -62,6 +65,7 @@ def atom_count(path: str) -> int:
 
 
 def summarise(prefix: str, delEs: list, rmsds: list, dmaes: list) -> None:
+    """Print the RMSE of the energy errors and the mean and std of the RMSDs and D-MAEs."""
     delEs, rmsds, dmaes = np.array(delEs), np.array(rmsds), np.array(dmaes)
     print(f"{prefix}RMSE: ", np.round(np.sqrt(np.mean(delEs**2)), 3).item())
     print(f"{prefix}RMSD: ", np.round(np.mean(rmsds), 3).item(), np.round(np.std(rmsds), 3).item())

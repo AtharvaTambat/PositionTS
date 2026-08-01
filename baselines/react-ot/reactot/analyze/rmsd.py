@@ -61,6 +61,14 @@ def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
     else:
         bfm = GeneticOrderMatcher(mol1, threshold=threshold)
         pairs = bfm.fit(mol2)
+        # ============================================================================
+        # FLAW (this work, paper Sec. 5.1(II))
+        # Implicit cap: rmsd is seeded with `threshold` and only ever lowered by the
+        # min() below, so when every GeneticOrderMatcher pair exceeds threshold the
+        # reported value is threshold (0.5 A by default), not the true RMSD. This is
+        # separate from, and additional to, the explicit 1.0 A cap further down.
+        # (An empty `pairs` is handled by the HungarianOrderMatcher branch instead.)
+        # ============================================================================
         rmsd = threshold
         for pair in pairs:
             rmsd = min(rmsd, pair[-1])
@@ -116,12 +124,32 @@ def batch_rmsd(
             rmsd = pymatgen_rmsd(
                 mol1,
                 mol2,
+                # ============================================================================
+                # FLAW (this work, paper Sec. 5.1(II))
+                # Two issues on this call.
+                # 1. ignore_chirality=True also matches the z-reflected geometry, so an
+                #    enantiomer of the true transition state scores as correct.
+                # 2. pymatgen_rmsd omits the sqrt(3) factor that undoes pymatgen's extra
+                #    averaging over the three Cartesian components, so values are smaller
+                #    by sqrt(3) than the definition in Sec. 5. analyze/rmsd_corrected.py
+                #    applies the factor but is imported nowhere.
+                # ============================================================================
                 ignore_chirality=True,
                 threshold=threshold,
                 same_order=same_order,
             )
         except:
+            # ============================================================================
+            # FLAW (this work, paper Sec. 5.1(II))
+            # A failed match is recorded as 1 rather than skipped, so matcher failures
+            # enter the reported statistics as if they were measurements.
+            # ============================================================================
             rmsd = 1
+        # ============================================================================
+        # FLAW (this work, paper Sec. 5.1(II))
+        # RMSD is capped at 1.0 A. Large errors are truncated, which compresses the
+        # reported spread and flatters poor predictions.
+        # ============================================================================
         rmsds.append(min(rmsd, 1.0))
         start_ind = end_ind
     return rmsds
@@ -152,6 +180,12 @@ def batch_rmsd_n_dmae(
         #     print("error :", e)
         #     rmsd = 5.0
         dmae = dmae_core(mol1, prime)
+        # ============================================================================
+        # FLAW (this work, paper Sec. 5.1(II))
+        # Corrected variant: this appends the raw rmsd. The capped form is retained
+        # two lines below but commented out, unlike batch_rmsd and batch_rmsd_sb
+        # above, which still apply the 1.0 A cap.
+        # ============================================================================
         rmsds.append(rmsd) #changed
         dmaes.append(dmae)
         # rmsds.append(min(rmsd, 1.0)) #changed
@@ -178,9 +212,18 @@ def batch_rmsd_sb(
         rmsd = pymatgen_rmsd(
             mol1,
             mol2,
+            # ============================================================================
+            # FLAW (this work, paper Sec. 5.1(II))
+            # ignore_chirality=True also matches the z-reflected geometry, so an
+            # enantiomer of the true transition state scores as correct.
+            # ============================================================================
             ignore_chirality=True,
             threshold=threshold,
             same_order=same_order,
         )
+        # ============================================================================
+        # FLAW (this work, paper Sec. 5.1(II))
+        # RMSD is capped at 1.0 A, truncating large errors.
+        # ============================================================================
         rmsds.append(min(rmsd, 1.0))
     return rmsds

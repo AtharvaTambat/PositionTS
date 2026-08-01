@@ -1,3 +1,4 @@
+"""Train the TS-GAN pix2pix generator and discriminator on a Coulomb-matrix .npy dataset."""
 # TS-GAN based on pix2pix model of Isola et al. arXiv2016, 1–17
 import argparse
 import os

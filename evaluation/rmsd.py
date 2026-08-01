@@ -1,3 +1,4 @@
+"""RMSD and D-MAE between two geometries, using the pymatgen atom-order matchers."""
 from typing import List
 import numpy as np
 import math
@@ -47,6 +48,11 @@ def xyz2pmg(xyzfile):
 #     return rmsd
 
 def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
+    """Order-match mol2 onto mol1; returns the matched Molecule and their RMSD.
+
+    Kabsch when same_order, else brute force under 1e4 atom permutations, else a genetic
+    search whose best pair is taken by argmin (Hungarian if it finds no pairs at all).
+    """
     _, count = np.unique(mol1.atomic_numbers, return_counts=True)
     if same_order:
         bfm = KabschMatcher(mol1)
@@ -80,6 +86,7 @@ def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
 
 
 def dmae_core(mol1, mol2):
+    """Mean absolute difference between the two interatomic distance matrices, over the n(n-1) off-diagonal entries."""
     dist1 = mol1.distance_matrix
     dist2 = mol2.distance_matrix
 
@@ -118,6 +125,11 @@ def pymatgen_rmsd(
     threshold=0.5,
     same_order=False,
 ):
+    """Order-match mol2 onto mol1; returns the matched copy and their RMSD scaled by sqrt(3), unclamped.
+
+    same_order is never forwarded to rmsd_core. With ignore_chirality the z-reflected mol2
+    is scored too and the smaller RMSD kept, but the returned copy is then the reflected one.
+    """
     if isinstance(mol1, str):
         mol1 = xyz2pmg(mol1)
     if isinstance(mol2, str):
@@ -198,6 +210,11 @@ def pymatgen_rmsd(
 def rmsd_n_dmae(gt_xyz, 
                 gen_xyz, 
                 threshold: float = 0.5):
+    """RMSD and D-MAE between a reference and a generated .xyz file.
+
+    The D-MAE is taken against the order-matched generated geometry; reflections are not
+    considered.
+    """
     mol1 = xyz2pmg(gt_xyz)
     mol2 = xyz2pmg(gen_xyz)
     prime, rmsd = pymatgen_rmsd(mol1, mol2, ignore_chirality=False, threshold=threshold)

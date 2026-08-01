@@ -191,6 +191,13 @@ class ProcessedTS1x():
             batch[x] = torch.tensor(batch[x], device=self.device)
         return batch
     
+    # ============================================================================
+    # FLAW (this work, paper Sec. 4.2(I), Table 3)
+    # Atom-mapping probe. Permuting product atom order leaves the physical
+    # system unchanged, so a permutation-equivariant model should be unaffected.
+    # Most baselines degrade by 2-4x in RMSD, which is the evidence that they
+    # silently rely on atom mapping being available at test time.
+    # ============================================================================
     def permute_fragments(self, out):
         """Relabel atoms of the selected fragments with one shared permutation."""
         if not self.permuted_fragments:

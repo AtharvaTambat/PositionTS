@@ -151,6 +151,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def resolve_datadir(args: argparse.Namespace) -> Path:
+    """Split directory for --dataset/--fraction, i.e. <data-root>/<stem>_splits or
+    <stem>_subset_<fraction>_splits, unless --datadir overrides it."""
     if args.datadir is not None:
         return args.datadir
     stem = DATASET_DIRS[args.dataset]
@@ -159,6 +161,8 @@ def resolve_datadir(args: argparse.Namespace) -> Path:
 
 
 def build_project_name(args: argparse.Namespace) -> str:
+    """Wandb project and checkpoint-directory name, OAReactDiff_<dataset> plus
+    _subset<fraction> and _<permute>_permuted suffixes where they apply."""
     if args.project is not None:
         return args.project
     name = f"OAReactDiff_{args.dataset}"
@@ -206,6 +210,7 @@ def build_module(
     optimizer_config: dict,
     training_config: dict,
 ) -> DDPMModule:
+    """DDPM module over the fixed R/TS/P layout; no fragment is held fixed (fixed_idx=None)."""
     node_nfs: List[int] = [9] * 3  # 3 (pos) + 5 (cat) + 1 (charge)
     fragment_names: List[str] = ["R", "TS", "P"]
     norm_values: Tuple = (1.0, 1.0, 1.0)

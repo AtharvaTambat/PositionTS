@@ -1,3 +1,4 @@
+"""Generate transition-state geometries from a trained TS-GAN generator checkpoint."""
 from numpy import load
 import numpy as np
 from numpy import zeros
@@ -87,7 +88,7 @@ def evaluate(g_model, dataset, file_names, react_dir, prod_dir, output_dir):
 
             completed += 1
 
-            # 🔹 progress log every 10 samples
+            # progress log every 10 samples
             if completed % 10 == 0 or completed == total:
                 print(f"[PROGRESS] {completed}/{total} TS generated")
 

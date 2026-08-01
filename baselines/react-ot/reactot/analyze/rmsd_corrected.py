@@ -1,3 +1,8 @@
+"""Corrected variant of analyze/rmsd.py; unused, nothing imports this module.
+
+Differs mainly by returning the order-matched molecule alongside the RMSD, dropping the
+1.0 clamp, taking a true minimum over GeneticOrderMatcher pairs, and scaling by sqrt(3).
+"""
 from typing import List
 import numpy as np
 import math
@@ -47,6 +52,7 @@ def xyz2pmg(xyzfile):
 #     return rmsd
 
 def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
+    """Order-match mol2 onto mol1; returns (matched Molecule, RMSD). Matcher picked by permutation count."""
     _, count = np.unique(mol1.atomic_numbers, return_counts=True)
     if same_order:
         bfm = KabschMatcher(mol1)
@@ -80,6 +86,7 @@ def rmsd_core(mol1, mol2, threshold=0.5, same_order=False):
 
 
 def dmae_core(mol1, mol2):
+    """Mean absolute difference between the two distance matrices, normalised by n*(n-1)."""
     dist1 = mol1.distance_matrix
     dist2 = mol2.distance_matrix
 
@@ -118,6 +125,10 @@ def pymatgen_rmsd(
     threshold=0.5,
     same_order=False,
 ):
+    """Order-match mol2 onto mol1; returns (matched Molecule, RMSD*sqrt(3)).
+
+    Either molecule may be an .xyz path; same_order is accepted but never forwarded to rmsd_core.
+    """
     if isinstance(mol1, str):
         mol1 = xyz2pmg(mol1)
     if isinstance(mol2, str):
@@ -143,6 +154,10 @@ def batch_rmsd(
     threshold: float = 0.5,
     same_order: bool = False,
 ) -> List[float]:
+    """Per-molecule RMSD between out_samples[idx] and xh[idx], split by fragments_nodes.
+
+    A matcher failure is swallowed and recorded as an RMSD of 5.0.
+    """
     rmsds = []
     out_samples_use = out_samples[idx]
     xh_use = xh[idx]
@@ -171,6 +186,11 @@ def batch_rmsd_n_dmae(
     threshold: float = 0.5,
     same_order: bool = False,
 ) -> List[float]:
+    """Per-molecule RMSD and D-MAE, split by fragments_nodes.
+
+    Returns two lists despite the List[float] annotation, and unlike batch_rmsd lets a
+    matcher failure propagate.
+    """
     rmsds = []
     dmaes = []
     out_samples_use = out_samples[idx]
@@ -202,6 +222,7 @@ def batch_rmsd_sb(
     threshold: float = 0.5,
     same_order: bool = True,
 ) -> List[float]:
+    """same_order defaults to True here, but pymatgen_rmsd never forwards it to rmsd_core."""
 
     rmsds = []
 

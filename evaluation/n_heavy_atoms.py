@@ -1,3 +1,4 @@
+"""Maximum and average molecular weight and heavy-atom count of the reactants across a dataset's three splits."""
 import rdkit
 from rdkit import Chem
 from rdkit.Chem import Descriptors
@@ -23,6 +24,11 @@ def calculate_heavy_atoms(mol):
         return None
 
 def prepare_mol(xyz, chg=0):
+    """Build an RDKit molecule from an xyz block, perceiving connectivity and bond orders.
+
+    A bond-order failure is printed and swallowed, so the molecule returned may carry
+    connectivity only.
+    """
     mol = Chem.MolFromXYZBlock(xyz)
     rdDetermineBonds.DetermineConnectivity(mol)
     try:

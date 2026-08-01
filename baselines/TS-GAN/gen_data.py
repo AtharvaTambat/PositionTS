@@ -1,3 +1,4 @@
+"""Build the Coulomb-matrix .npy training set from a directory of .xyz files."""
 import numpy as np
 import os
 import glob
@@ -70,4 +71,4 @@ os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
 
 np.save(output_path, data)
 
-print(f"✅ Saved {len(pr)} samples to {output_path}")
+print(f"Saved {len(pr)} samples to {output_path}")

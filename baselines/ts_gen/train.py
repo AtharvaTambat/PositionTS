@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Train the ts_gen graph-to-coordinates network on aligned reactant, product and TS SDFs."""
 from __future__ import print_function
 import os
 import os, sys, time, random

@@ -1,3 +1,4 @@
+"""Run a nudged-elastic-band search for one reactant/product pair using a trained PaiNN potential."""
 from argparse import ArgumentParser
 import sys
 sys.path.append("../neuralneb")

@@ -1,3 +1,4 @@
+"""Write a copy of a folder of .xyz files with the atom lines permuted."""
 import os
 import sys
 import numpy as np
@@ -9,6 +10,7 @@ input_folder = sys.argv[1]
 output_folder = sys.argv[2]
 
 def shuffle_coords(xyz_lines):
+    """Reorder the atom lines of an xyz file and replace its comment line with "shuffled TS"."""
     xyz_lines_mod = xyz_lines[-1] + "\n"
     xyz_lines[-1] = xyz_lines_mod
     n_atoms = int(xyz_lines[0].strip())
@@ -22,16 +24,7 @@ def shuffle_coords(xyz_lines):
     return output_lines
 
 def write_xyz(output_path, xyz_lines):
-    """
-    Write XYZ content to a file.
-
-    Parameters
-    ----------
-    output_path : str
-        Path to the output .xyz file.
-    xyz_lines : list[str] or str
-        XYZ content as a list of lines or a single string.
-    """
+    """Write xyz_lines to output_path, joining it if it is a list and str()-ing it otherwise."""
     with open(output_path, "w") as f:
         if isinstance(xyz_lines, list):
             f.write("".join(xyz_lines))

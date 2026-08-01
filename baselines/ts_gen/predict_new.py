@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""Predict transition-state geometries from a trained ts_gen G2C checkpoint.
+
+Current entry point (--reactants/--products/--checkpoint/--output_dir); predict.py is
+the older superseded version.
+"""
+
 from __future__ import print_function
 
 import os
@@ -12,6 +18,7 @@ from model.G2C import G2C
 
 # ---------- LOAD DATA ----------
 def load_data(reactant_file, product_file):
+    """Pair the two SDFs into (reactant, product) tuples, dropping any pair either supplier fails to read."""
     r_suppl = Chem.ForwardSDMolSupplier(reactant_file, removeHs=False, sanitize=False)
     p_suppl = Chem.ForwardSDMolSupplier(product_file, removeHs=False, sanitize=False)
 
@@ -24,6 +31,11 @@ def load_data(reactant_file, product_file):
 
 # ---------- PREPARE BATCH (FROM NOTEBOOK) ----------
 def prepare_batch(batch_mols, MAX_SIZE, elements):
+    """Build the padded node, edge, size and coordinate arrays G2C is fed, keyed "V"/"E"/"sizes"/"coordinates".
+
+    Edge channel 0 is the mean topological distance capped at 10, channel 1 exp(-mean 3D
+    distance), channel 2 unused. Coordinates come from the reactant conformer.
+    """
 
     num_elements = len(elements)
 
@@ -73,6 +85,7 @@ def prepare_batch(batch_mols, MAX_SIZE, elements):
 
 # ---------- BATCH GENERATOR ----------
 def sample_batch(data, BATCH_SIZE, MAX_SIZE, elements):
+    """Yield (feature dict, molecule pairs) for each consecutive slice of BATCH_SIZE reactions."""
     total = len(data)
     for i in range(0, total, BATCH_SIZE):
         batch_mols = data[i:i+BATCH_SIZE]

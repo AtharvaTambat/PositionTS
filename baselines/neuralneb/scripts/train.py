@@ -1,3 +1,4 @@
+"""Train the PaiNN interatomic potential used by the NEB drivers, on the QM9x database."""
 import itertools
 import os
 from argparse import ArgumentParser

@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""Predict transition-state geometries from a trained ts_gen G2C checkpoint.
+
+Older, superseded version kept for reference: it takes reactant SDF, product SDF,
+checkpoint and output directory positionally. Use predict_new.py instead.
+"""
+
 import os
 import sys
 import numpy as np
@@ -12,6 +18,7 @@ from model.G2C import G2C
 # Load SDF
 # -----------------------------
 def load_sdf(path):
+    """Read an SDF into sanitised RDKit molecules with explicit hydrogens, skipping unreadable entries."""
     from rdkit import Chem
 
     supplier = Chem.SDMolSupplier(path, removeHs=False, sanitize=False)
@@ -35,6 +42,11 @@ def load_sdf(path):
 # Prepare features (UNCHANGED)
 # -----------------------------
 def prepare_batch(reactants, products, MAX_SIZE, elements):
+    """Build the padded node, edge, size and coordinate arrays G2C is fed.
+
+    Edge channel 1 flags topologically bonded pairs and channel 2 holds exp(-mean 3D
+    distance); channel 0 is left zero. Coordinates come from the reactant conformer.
+    """
     num_elements = len(elements)
     size = len(reactants)
 
@@ -98,6 +110,7 @@ def write_xyz(path, mol, coords, idx):
 # Predict
 # -----------------------------
 def predict(react_sdf, prod_sdf, ckpt, output_dir):
+    """Predict a TS per reactant/product pair into <output_dir>/tsgen_idx_%06d.xyz; predict_new.py writes unpadded names."""
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)

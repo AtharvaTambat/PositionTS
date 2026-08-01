@@ -1,7 +1,9 @@
+"""Fixed atom-order permutations shared by the permuted-copy scripts."""
 import numpy as np
 import torch
 
 def permutated_idxs(nodes):
+    """Shuffled range(nodes); the seed is fixed, so a given size always gives the same order."""
     np.random.seed(42)
     perm_indices = []
     perms = list(range(nodes))
@@ -9,17 +11,9 @@ def permutated_idxs(nodes):
     return perms
 
 def create_permutation_matrix(nodes):
-    """
-    Creates a permutation matrix from a list of permutation indices.
+    """Square torch permutation matrix P over `nodes` atoms, so that P @ x reorders rows by permutated_idxs(nodes).
 
-    Args:
-        permutation_indices: A list/array where the value at index i
-                             indicates the new position (column j) for
-                             the 1 in row i. E.g., [1, 2, 0] means
-                             row 0 has 1 in column 1, row 1 in column 2,
-                             and row 2 in column 0.
-    Returns:
-        A NumPy permutation matrix (2D array).
+    `nodes` must be a tensor: its device is the one P is built on.
     """
     permutation_indices = permutated_idxs(nodes)
     n = len(permutation_indices)

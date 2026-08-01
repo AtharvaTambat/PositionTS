@@ -150,6 +150,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def resolve_datadir(args: argparse.Namespace) -> Path:
+    """Split directory implied by --dataset/--fraction (<stem>_splits or <stem>_subset_<n>_splits), unless --datadir overrides it."""
     if args.datadir is not None:
         return args.datadir
     stem = DATASET_DIRS[args.dataset]
@@ -167,6 +168,7 @@ def build_project_name(args: argparse.Namespace) -> str:
 
 
 def build_configs(args: argparse.Namespace, datadir: Path) -> Tuple[dict, dict, dict]:
+    """The model config returned is always LEFTNET_CONFIG, regardless of --model."""
     optimizer_config = dict(
         lr=args.lr,
         betas=[0.9, 0.999],
@@ -202,6 +204,10 @@ def build_configs(args: argparse.Namespace, datadir: Path) -> Tuple[dict, dict, 
 
 
 def load_pretrained_source(checkpoint: Path, training_config: dict) -> dict:
+    """Return the model, encoder and decoder state dicts of a DDPM checkpoint.
+
+    Also records the checkpoint path and use_pretrain into training_config in place.
+    """
     ddpm_trainer = DDPMModule.load_from_checkpoint(
         checkpoint_path=str(checkpoint),
         map_location="cpu",
@@ -223,6 +229,7 @@ def build_module(
     training_config: dict,
     source: Optional[dict],
 ) -> SBModule:
+    """Build the bridge module over the fixed R/TS/P fragment layout, with R and P held fixed."""
     node_nfs: List[int] = [9] * 3  # 3 (pos) + 5 (cat) + 1 (charge)
     fragment_names: List[str] = ["R", "TS", "P"]
     norm_values: Tuple = (1.0, 1.0, 1.0)
@@ -267,6 +274,7 @@ def build_module(
 
 
 def build_callbacks(args: argparse.Namespace, ckpt_path: Path, module: SBModule) -> list:
+    """Lightning callbacks for the run; both early stopping and checkpointing track val_ep_scaled_err."""
     callbacks = [
         EarlyStopping(
             monitor="val_ep_scaled_err",

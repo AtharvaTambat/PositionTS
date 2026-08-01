@@ -1,3 +1,8 @@
+"""DFT energies, forces and Hessians for transition-state geometries, via PySCF and GPU4PySCF.
+
+Supplies the energy error used by evaluate.py and the imaginary-frequency count used as
+the saddle-point test.
+"""
 import numpy as np
 
 from pyscf import gto, dft
@@ -19,6 +24,7 @@ BOHR = 0.52917721092
 
 
 def count_negative_eig(x: list):
+    """Number of imaginary harmonic frequencies, i.e. entries with a positive imaginary part."""
     count = 0
     for _x in x:
         if _x.imag > 0:
@@ -31,6 +37,11 @@ def _to_numpy(x):
     return x.get() if hasattr(x, "get") else x
 
 def compute_efh_gpu(geomfile,f=True,hess=False,return_metrics=False,xc="wb97x",basis="631g*",d3=False,use_gpu=True,auxbasis=None):
+    """Density-fitted closed-shell DFT single point, returning the mean-field object, forces and Hessian.
+
+    Forces are in Hartree/Angstrom; with return_metrics the tuple is extended with the
+    force RMS in eV/Angstrom and the number of imaginary frequencies (None without hess).
+    """
     spin = 0
 
     mol = gto.M(
@@ -89,6 +100,11 @@ def compute_efh_gpu(geomfile,f=True,hess=False,return_metrics=False,xc="wb97x",b
     return mf, force, hessian
 
 def compute_efh(geomfile, f=True, hess=False, return_metrics=False, xc="wb97x", basis="631g*", d3=False):
+    """CPU counterpart of compute_efh_gpu, without density fitting.
+
+    return_metrics only works together with hess, since the frequencies it reports are
+    computed inside the Hessian branch.
+    """
     spin = 0
     mol = gto.M(
         atom=geomfile,
@@ -175,6 +191,7 @@ def compute_efh(geomfile, f=True, hess=False, return_metrics=False, xc="wb97x", 
 
 
 def compute_barrier(opt1_xyz, ts_xyz, opt2_xyz):
+    """Barrier heights in eV from each of the two optimised endpoints up to the transition state."""
     mf_1, _, _ = compute_efh(opt1_xyz, f=True, hess=False, return_metrics=False)
     mf_2, _, _ = compute_efh(opt2_xyz, f=True, hess=False, return_metrics=False)
     mf_ts, _, _ = compute_efh(ts_xyz, f=True, hess=False, return_metrics=False)
@@ -184,6 +201,7 @@ def compute_barrier(opt1_xyz, ts_xyz, opt2_xyz):
 
 
 def calc_deltaE(xyzfile1, xyzfile2, f=False, xc="wb97x", basis="631g*", d3=False):
+    """Single-point energy of the second geometry minus the first, in kcal/mol."""
     mf_1, _, _ = compute_efh_gpu(xyzfile1, f=f, hess=False, return_metrics=False, xc=xc, basis=basis, d3=d3)
     mf_2, _, _ = compute_efh_gpu(xyzfile2, f=f, hess=False, return_metrics=False, xc=xc, basis=basis, d3=d3)
     return (mf_2.e_tot - mf_1.e_tot) * AU2KCALMOL

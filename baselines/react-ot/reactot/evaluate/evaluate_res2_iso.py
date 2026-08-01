@@ -1,3 +1,4 @@
+"""Sample TSs for the isomer test split and report RMSD, D-MAE and TS energy error."""
 from typing import List
 import time
 import os
@@ -29,6 +30,8 @@ EV2KCALMOL = 23.06
 AU2KCALMOL = 627.5
 
 class OPT:
+    """Solver settings consumed by the Schrodinger-bridge sampler."""
+
     def __init__(
         self,
         solver,
@@ -42,6 +45,7 @@ class OPT:
 opt = OPT(solver="ddpm", method="midpoint")
 
 def save_pickle(filename, rmsds, deltaEs):
+    """Pickle the RMSD and TS energy-error lists to results/<filename>, relative to the cwd."""
     with open(f"results/{filename}", "wb") as fo:
         pickle.dump(
             {
